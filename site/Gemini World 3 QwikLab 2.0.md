@@ -69,32 +69,21 @@ On startup, AGY will scan the existing `.agents/skills/` folder and load the wor
 
 ![](images/verify-skills.png)
 
-## Install Additional Tools
+## Your Pre-Configured Tools
 
-The Github repo we downloaded in the last step gave us some basic tools to get started. Let's augment our environment with even more useful skills and MCPs to make developing agents on Google Cloud even easier.
+Beyond skills, your workshop environment comes pre-wired with the tools you'll need to build agents on Google Cloud — no manual installation required. These load automatically when AGY starts up inside the `gemini-world-track-3` folder.
 
 > **Why skills matter:** by packaging the right steps and context up front, skills save tokens and time and improve accuracy — the agent completes a task in fewer steps, instead of rediscovering (and sometimes getting wrong) the workflow every time.
 
-### Agent CLI
+> **What's an MCP?** Model Context Protocol (MCP) is a standard way to plug external tools and data sources into your coding agent. An MCP *server* gives the agent a new ability — here, searching Google's official documentation and working directly with Firebase.
 
-[**agents-cli**](https://google.github.io/agents-cli/guide/getting-started/) is Google's CLI for the full agent development lifecycle — scaffold, deploy, evaluate, and publish — all on top of the [Agent Development Kit (ADK)](https://google.github.io/adk-docs/). It's both a command-line tool and a set of skills that enable your coding agent (in this case, Antigravity) to work with Google's agent development tools effectively.
+Here's what's already set up for you:
 
-```
-Install and configure agents-cli. When you're done, make sure you have access to the SKILL files it exposes.
-```
-**IMPORTANT TODO**: right now, `agents-cli` isn't installed by default in the workstations, and installation is time consuming. We **must** have this pre-installed for the actual lab.
+- **[agents-cli](https://google.github.io/agents-cli/guide/getting-started/)** — Google's CLI for the full agent development lifecycle (scaffold, deploy, evaluate, and publish), built on the [Agent Development Kit (ADK)](https://google.github.io/adk-docs/). It's pre-installed on your workstation, and the skills it exposes load automatically.
+- **[Developer Knowledge MCP](https://codelabs.developers.google.com/developer-knowledge-mcp-antigravity)** — gives AGY **grounded, current knowledge of Google's official docs** (Google Cloud, Firebase, ADK, and the Agent Platform products you'll use later) instead of guessing commands, which keeps the later modules out of trial-and-error spirals.
+- **[Firebase MCP](https://firebase.google.com/docs/ai-assistance/mcp-server)** — lets AGY work directly with Firebase services like Firestore, which you'll use for persistent storage.
 
-### The Developer Knowledge MCP
-
-> **What's an MCP?** Model Context Protocol (MCP) is a standard way to plug external tools and data sources into your coding agent. An MCP *server* gives the agent a new ability — here, the ability to search Google's official documentation.
-
-Now let's give Antigravity **grounded, current knowledge of Google's official docs**. The [Developer Knowledge MCP](https://codelabs.developers.google.com/developer-knowledge-mcp-antigravity) lets AGY search Google's live public documentation (across Google Cloud, Firebase, and more — including the Agent Platform products you'll use later) instead of guessing commands, which keeps the later modules out of trial-and-error spirals. It complements agents-cli: agents-cli knows the CLI workflow, while the MCP grounds AGY in the current docs for everything around it.
-
-```
-Follow the directions at https://codelabs.developers.google.com/developer-knowledge-mcp-antigravity to install the Google Developer Knowledge MCP.
-```
-
-Once it's installed, run `/mcp` to confirm `google-developer-knowledge` was correctly installed:
+Both MCPs are pre-configured in the repo's `.agents/mcp_config.json` and authenticate automatically with the credentials you just set up. Run `/mcp` in AGY to confirm both `firebase` and `google-developer-knowledge` are connected:
 
 ![](images/verify-developer-mcp.png)
 
@@ -243,13 +232,9 @@ Depending on your application, you may require an external data store, like:
 - **Structured data** (inventory, orders, user records) → a database like **Firestore** (serverless, simple).
 - **Raw files/blobs** (bulk images, static assets) → **Cloud Storage (GCS)**.
 
-Let's start by implementing structured data in Firestore. First, let's equip Antigravity with the [Firebase MCP](https://firebase.google.com/docs/ai-assistance/mcp-server) so it's better able to use the Firestore API:
+Let's start by implementing structured data in Firestore. Antigravity is already equipped with the [Firebase MCP](https://firebase.google.com/docs/ai-assistance/mcp-server) (pre-configured back in [Your Pre-Configured Tools](#your-pre-configured-tools)), so it can work with the Firestore API directly.
 
-```
-Install the Firebase MCP server.
-```
-
-When that's done, ask AGY to give your agent a Firestore backend. Describe a collection that fits whatever you're building. AGY can look at your project_brief.md and pick sensible fields. Adapt this prompt to your own domain:
+Ask AGY to give your agent a Firestore backend. Describe a collection that fits whatever you're building. AGY can look at your project_brief.md and pick sensible fields. Adapt this prompt to your own domain:
 
 ```
 Give my agent a Firestore backend: a collection that fits my app (look at my project_brief.md) with a few sensible fields, function tools to read and write it, and a few seeded items. Important: hardcode my project ID as a string for the Firestore client and the seed script (find it with `gcloud config get-value project`). Don't read it from `google.auth.default()` or `GOOGLE_CLOUD_PROJECT`; on Agent Platform those return the project number, which breaks Firestore after you deploy.

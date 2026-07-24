@@ -97,9 +97,22 @@
     background: none; color: inherit; padding: 0; font-family: var(--mono);
     font-size: .86rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word;
   }
-  #content pre::before {
-    content: "prompt"; position: absolute; top: .35rem; right: .6rem;
-    font-size: .62rem; font-weight: 700; color: #777; text-transform: uppercase; letter-spacing: 1px;
+  /* Clickable copy-to-clipboard button on every code block */
+  #content pre .copy-btn {
+    position: absolute; top: .4rem; right: .5rem;
+    display: inline-flex; align-items: center; gap: .3rem;
+    background: rgba(255,255,255,.1); color: #d4d4d4;
+    border: 1px solid rgba(255,255,255,.2); border-radius: 6px;
+    padding: .25rem .55rem; font-size: .66rem; font-weight: 700;
+    font-family: var(--font); cursor: pointer; text-transform: uppercase;
+    letter-spacing: .5px; line-height: 1; opacity: .55;
+    transition: background .15s, color .15s, border-color .15s, opacity .15s;
+  }
+  #content pre:hover .copy-btn { opacity: 1; }
+  #content pre .copy-btn:hover { background: rgba(255,255,255,.22); color: #fff; }
+  #content pre .copy-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; opacity: 1; }
+  #content pre .copy-btn.copied {
+    background: var(--success); color: #fff; border-color: var(--success); opacity: 1;
   }
 
   /* Blockquotes -> info callout */
@@ -201,6 +214,41 @@
     const html = marked.parse(cleaned, { gfm: true, breaks: false });
     const content = document.getElementById("content");
     content.innerHTML = html;
+
+    // Add a clickable copy-to-clipboard button to every code block
+    content.querySelectorAll("pre").forEach(pre => {
+      const code = pre.querySelector("code");
+      if (!code) return;
+      const btn = document.createElement("button");
+      btn.className = "copy-btn";
+      btn.type = "button";
+      btn.textContent = "Copy";
+      btn.setAttribute("aria-label", "Copy code to clipboard");
+      btn.addEventListener("click", async () => {
+        const text = code.innerText;
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch (e) {
+          // Fallback for non-secure contexts / older browsers
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand("copy"); } catch (_) {}
+          ta.remove();
+        }
+        btn.textContent = "Copied!";
+        btn.classList.add("copied");
+        clearTimeout(btn.__t);
+        btn.__t = setTimeout(() => {
+          btn.textContent = "Copy";
+          btn.classList.remove("copied");
+        }, 1800);
+      });
+      pre.appendChild(btn);
+    });
 
     // Missing screenshots -> clean "pending" placeholder instead of a broken-image icon
     content.querySelectorAll("img").forEach(img => {
