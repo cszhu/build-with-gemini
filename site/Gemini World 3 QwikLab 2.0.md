@@ -512,14 +512,16 @@ On success it prints `SUCCESS: Recording saved to <path>`, leaving a branded `.w
 
 ## Turn it into a shareable README
 
-A demo is even better with a landing page. Ask AGY to generate a README that tells the story of your app and features the clip you just recorded:
+A demo is even better with a landing page. Ask AGY to generate a README that tells the story of your app and shows the clip you just recorded — as a **GIF**, which is the no-fuss way to get a demo playing in a README:
 
 ```
-Generate a README.md for my project that describes what my agent does (use my project_brief.md), lists its key features and the Google Cloud tools it uses (Memory Bank, Firestore, Cloud Storage, RAG, image generation, A2UI), and embeds the demo video I just recorded near the top so viewers can watch it right away.
+Generate a README.md for my project that describes what my agent does (use my project_brief.md) and lists its key features and the Google Cloud tools it uses (Memory Bank, Firestore, Cloud Storage, RAG, image generation, A2UI). Convert my demo recording to an optimized, looping GIF and embed it near the top with a relative path so it plays inline.
 ```
 
-Now your repo has a proper front door: a clear description, a feature list, and a demo of your agent in action — the perfect thing to link when someone asks *"what did you build?"*
+Why a GIF? Committed alongside your code and referenced with a plain relative path (`![demo](demo.gif)`), it renders and loops automatically on GitHub — no uploads, no special links. Keep the original `.webm` as your high-quality **social asset**: X, LinkedIn, and Slack all play an uploaded video natively.
 
-> **Getting the video to play on GitHub:** GitHub embeds a `.webm` inline when you **drag it into the README editor on github.com** (this uploads it and inserts a working player). A video committed to the repo and referenced by a relative path will show as a download link rather than an inline player, so for a true autoplaying embed, upload it through the web editor and paste the generated link where AGY placed the video.
+> **Prefer a real video player in the README?** GitHub only renders an inline player for videos uploaded through its web editor (`.webm` committed to the repo and linked by path stays a download link). If you want the player rather than a GIF, drag the `.webm` into the README on github.com and it inserts a working embed.
+
+Now your repo has a proper front door: a clear description, a feature list, and a looping demo of your agent in action — the perfect thing to link when someone asks *"what did you build?"*
 
 Congratulations — you've designed, built, equipped, evaluated, deployed, *and* shared a complete agentic application.
