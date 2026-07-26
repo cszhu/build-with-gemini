@@ -212,24 +212,26 @@ You will:
 
 # Set Up Your Environment
 
-Find your Qwiklab credentials [here](https://explore.qwiklabs.com/authoring/labs/471145). **Don't follow that tutorial's setup instructions.** (TODO to update the correct instructions in Qwiklab). Instead, right-click on "Open Google Cloud Console" and select "Open Link in Incognito Window," then log in with the provided credentials.
+First, make sure you've followed the Qwiklab tutorial, have access to your temporarily credentials. 
 
-Once you're logged into Google Cloud Console with your Qwiklab credentials, launch a Workstation:
-
+Today, we'll be developing in a [Workstation](https://cloud.google.com/workstations)--a fully managed development environment that runs on a Virtual Machine. To access your workstation, search "Workstation" in the top search bar:
 ![](images/search_workstation.png)
+
+
+You should have a workstation pre-provisioned. Just click launch!
 ![](images/launch_workstation.png)
 
- We'll do all our development here, in Code OSS (i.e. the Cloud Shell Editor within a Workstation):
+ We'll do all our development here, in what's called "Code OSS" (i.e. the Cloud Shell Editor within a Workstation):
 ![](images/workstation_developer_interface.png)
 
-> **Important** We'll be developing with the Cloud Shell editor WITHIN A WORKSTATION. If you try to use Cloud Shell OUTSIDE of a Workstation, you'll quickly run out of memory. So make sure not to do that!
+> **Important** You can Code OSS directly at cloud.google.com, OR from within a Workstation. They look similar, but for this lab, YOU MUST USE CODE OSS WITHIN A WORKSTATION. If you try to use Cloud Shell OUTSIDE of a Workstation, you'll quickly run out of resources quickly.
 
 Click the button in the upper right hand corner to open a terminal:
 ![](images/open-terminal.png)
 
 ## Authenticate
 
-In Cloud Shell, run the following commands to set up authentication using your Qwiklab credentials:
+In Cloud Shell, run the following commands to set up authentication using your Qwiklab credentials. Do NOT use your personal credentials.
 
 ```bash
 gcloud auth login
@@ -238,10 +240,7 @@ gcloud auth application-default login
 
 ## Get Started with Antigravity CLI
 
-
-To start, download this [Github repo](https://github.com/dalequark/gemini-world-track-3) that comes equipped with 
-a selection of starter skills. 
-
+To start, download this [Github repo](https://github.com/dalequark/gemini-world-track-3) that comes equipped with a selection of starter skills. 
 
 > **What is a skill?** A bundle of instructions that teaches your coding agent how to do a specific task well. It loads automatically when it's relevant, so you get expert behavior without spelling out every step yourself.
 
@@ -677,6 +676,52 @@ To try video generation:
 ```
 Add a tool that generates a short video for an item in my agent's domain (look at my project_brief.md) using Google's Omni model (gemini-omni-flash-preview) in the global region. Save the video as an artifact. Use the Developer Knowledge MCP to confirm the API.
 ```
+
+# Share What You Built
+
+You've gone from an empty folder to a deployed, agent-first application. The last step is the fun one: capture it and show it off. Your repo ships a **`record-demo`** skill that films your agent in action and produces a polished, branded video clip — perfect for a tweet, a Slack message, or the top of a README.
+
+## Record a demo clip
+
+The `record-demo` skill drives your chat UI in a headless browser: it opens the page, types real prompts, waits for each reply, and saves a short **`.webm`** with a "Gemini World Tour" frame around it. It works against either face of your agent — your custom frontend (`localhost:8080`) or the Playground.
+
+First, make sure the UI you want to film is running (your frontend from the last section, or the Playground). Then tell AGY what to show off — pick 2–3 prompts that exercise your agent's best features (a tool call, a Firestore lookup, a generated image, an A2UI card):
+
+```
+Record a demo video of my agent. Show it doing the thing my app does best, then ask a second, richer prompt that shows off a tool call, a database lookup, or a generated image.
+```
+
+For example, a store agent might use: *"Record a demo of my agent. Ask it what's in stock, then ask it to generate a picture of the first item."* A great clip is short and snappy — **2–3 turns, roughly 20–40 seconds**.
+
+> **Add a soundtrack (optional).** The recorder can score your clip with AI-generated instrumental music using Google's Lyria model, matched to the video's length. Just describe the vibe:
+> ```
+> Record a demo of my agent and add some upbeat lo-fi background music.
+> ```
+
+If you'd rather run it yourself, call the recorder directly from your project root (bump `--wait` to `30000`+ for turns that generate an image or video):
+
+```bash
+node .agents/skills/record-demo/record-agent.js \
+  -q "First demo prompt" \
+  -q "Second demo prompt" \
+  -o agent_demo.webm
+```
+
+On success it prints `SUCCESS: Recording saved to <path>`, leaving a branded `.webm` in your project — ready to share.
+
+## Turn it into a shareable README
+
+A demo is even better with a landing page. Ask AGY to generate a README that tells the story of your app and features the clip you just recorded:
+
+```
+Generate a README.md for my project that describes what my agent does (use my project_brief.md), lists its key features and the Google Cloud tools it uses (Memory Bank, Firestore, Cloud Storage, RAG, image generation, A2UI), and embeds the demo video I just recorded near the top so viewers can watch it right away.
+```
+
+Now your repo has a proper front door: a clear description, a feature list, and a demo of your agent in action — the perfect thing to link when someone asks *"what did you build?"*
+
+> **Getting the video to play on GitHub:** GitHub embeds a `.webm` inline when you **drag it into the README editor on github.com** (this uploads it and inserts a working player). A video committed to the repo and referenced by a relative path will show as a download link rather than an inline player, so for a true autoplaying embed, upload it through the web editor and paste the generated link where AGY placed the video.
+
+Congratulations — you've designed, built, equipped, evaluated, deployed, *and* shared a complete agentic application.
 
 </script>
 <script>
