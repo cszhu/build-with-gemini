@@ -126,7 +126,7 @@ When it's done, AGY should produce something like:
 
 Behind the scenes, `agents-cli` scaffolds a complete ADK project for you: a Python agent definition, its configuration, and the local run/playground setup — all the boilerplate you'd otherwise write by hand — so you can go straight to shaping your agent's behavior.
 
-When it's done, we can tell AGY to test our agent from the command line:
+We can then tell AGY to test our agent from the command line:
 
 ```
 Test my agent with the message, "What's the weather in New York?"
@@ -246,7 +246,7 @@ Depending on your application, you may require an external data store, like:
 - **Structured data** (inventory, orders, user records) → a database like **Firestore** (serverless, simple).
 - **Raw files/blobs** (bulk images, static assets) → **Cloud Storage (GCS)**.
 
-Let's start by implementing structured data in Firestore. Antigravity is already equipped with the [Firebase MCP](https://firebase.google.com/docs/ai-assistance/mcp-server) (pre-configured back in [Your Pre-Configured Tools](#your-pre-configured-tools)), so it can work with the Firestore API directly.
+Let's start by implementing structured data in Firestore. Antigravity is already equipped with the [Firebase MCP](https://firebase.google.com/docs/ai-assistance/mcp-server) (pre-configured back in [Installing Skills and MCPs](#installing-skills-and-mcps)), so it can work with the Firestore API directly.
 
 Ask AGY to give your agent a Firestore backend. Describe a collection that fits whatever you're building. AGY can look at your project_brief.md and pick sensible fields. Adapt this prompt to your own domain:
 
@@ -381,7 +381,7 @@ Up to now you've tested everything in the ADK playground, and that's been your a
 
 ## Redeploy your finished agent
 
-Your agent has grown a lot since you first deployed it: it now has storage, tools, media generation, a sandbox, and A2UI, none of which are in that original deployment. Before wiring up a frontend, push the latest version to Agent Platform so the frontend talks to the  fully-featured agent:
+Your agent has grown a lot since you first deployed it: it now has storage, tools, media generation, a sandbox, and A2UI, none of which are in that original deployment. Before wiring up a frontend, push the latest version to Agent Platform so the frontend talks to the fully-featured agent:
 
 ```bash
 Redeploy my agent to Agent Platform.
