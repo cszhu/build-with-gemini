@@ -64,7 +64,7 @@ When asked, **choose option 2 to authenticate with a Google Cloud project** and 
 
 > **Avoid agent confusion!** In this workshop, we'll be _building_ an agent with the help of an _additional_ agent--specifically, with the coding agent Antigravity (AGY). It's helpful to keep this distinction in mind as we go through the lab.
 
-On startup, AGY will scan the existing `.agents/skills/` folder and load the workshop skills automatically. To see your installed skills, run `/skills` in AGY. You should see three skills listed:
+On startup, AGY will scan the existing `.agents/skills/` folder and load the workshop skills automatically. To see your installed skills, run `/skills` in AGY. You should see several skills listed:
 
 ![](images/verify-skills.png)
 
