@@ -240,7 +240,7 @@ Depending on your application, you can be more specific about what to remember:
 Configure memory so that all user allergies are remembered.
 ```
 
-To try it out, chat with your agent and tell it a durable fact about yourself (for example, a preference). Memory Bank extracts memories in the background after the turn. You can then see the stored memories in the Agent Platform UI [here](https://console.cloud.google.com/agent-platform/memory-bank):
+To try it out, chat with your **deployed** agent (in the browser) and tell it a durable fact about yourself (for example, a preference). Memory Bank extracts memories in the background after the turn. You can then see the stored memories in the Agent Platform UI [here](https://console.cloud.google.com/agent-platform/memory-bank):
 
 ![A memory stored in the Agent Platform Memory Bank UI](images/apothecary-memory.png)
 
