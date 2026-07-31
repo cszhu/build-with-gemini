@@ -476,8 +476,6 @@ This invokes the `troubleshoot-lab-setup` skill we downloaded earlier from Githu
 
 Your setup is complete--let's start building! 🎊
 
----
-
 # Build Your First Agent
 
 Later in this lab, you'll design your own bespoke agentic application. But for now, let's build and test a basic agent together. Tell AGY to build a basic agent and run it locally.
@@ -492,13 +490,20 @@ When it's done, AGY should produce something like:
 
 Behind the scenes, `agents-cli` scaffolds a complete ADK project for you: a Python agent definition, its configuration, and the local run/playground setup — all the boilerplate you'd otherwise write by hand — so you can go straight to shaping your agent's behavior.
 
-> Tip: If you navigate away from your terminal and AGY exits, you can always access past sessions by opening AGY again and running `/resume`.
-
 When it's done, we can tell AGY to test our agent from the command line:
 
 ```
-Test my agent with the message, "Tell me a joke about a lemon."
+Test my agent with the message, "What's the weather in New York?"
 ```
+
+Now let's take a look at the code Antigravity generated to create this agent. You can view it in the Cloud Shell Editor. To get there, click Open Editor:
+
+![](images/open-editor.png)
+
+We can find the logic for our agent in the file `app/agent.py`:
+![](images/cloud-shell-editor.png)
+
+> Tip: If you navigate away from your terminal and AGY exits, you can always access past sessions by opening AGY again and running `/resume`.
 
 ## The Playground
 
