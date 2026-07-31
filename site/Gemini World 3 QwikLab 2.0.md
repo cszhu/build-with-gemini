@@ -13,7 +13,17 @@ You will:
 
 # Set Up Your Environment
 
-First, make sure you've followed the Qwiklab tutorial, have access to your temporarily credentials. 
+For this lab, you'll be given access to a temporary GCP environment with ephemeral credentials. You can find your temporary username, password, and project ID here:
+
+![](images/findcreds.png)
+
+Noting your credentials, right click "Open Lab Console" and select "Open Link in Incognito Window":
+
+![](images/incognito.png)
+
+When prompted, enter your provided credentials. You should be taken to the GCP console, which looks like this:
+
+![](images/gcp-console.png)
 
 Today, we'll be developing in a [Workstation](https://cloud.google.com/workstations)--a fully managed development environment that runs on a Virtual Machine. To access your workstation, search "Workstation" in the top search bar:
 ![](images/search_workstation.png)
@@ -25,92 +35,92 @@ You should have a workstation pre-provisioned. Just click launch!
  We'll do all our development here, in what's called "Code OSS" (i.e. the Cloud Shell Editor within a Workstation):
 ![](images/workstation_developer_interface.png)
 
-> **Important** You can Code OSS directly at cloud.google.com, OR from within a Workstation. They look similar, but for this lab, YOU MUST USE CODE OSS WITHIN A WORKSTATION. If you try to use Cloud Shell OUTSIDE of a Workstation, you'll quickly run out of resources quickly.
+> **Important** Make sure you are using Code OSS from within a Workstation. If you try to use Cloud Shell outside of a Workstation, you'll quickly run out of resources.
 
 Click the button in the upper right hand corner to open a terminal:
 ![](images/open-terminal.png)
 
 ## Authenticate
 
-In Cloud Shell, run the following commands to set up authentication using your Qwiklab credentials. Do NOT use your personal credentials.
+In Cloud Shell, run the following commands to set up authentication using your provided credentials. Do NOT use your personal credentials.
 
 ```bash
-gcloud auth login
-gcloud auth application-default login
+gcloud auth login --update-adc
 ```
 
-## Get Started with Antigravity CLI
+![](images/gcloud-auth.png)
 
-To start, download this [Github repo](https://github.com/dalequark/gemini-world-track-3) that comes equipped with a selection of starter skills. 
+## Installing Skills and MCPs
+In this lab, we'll generate code with **Antigravity CLI** (AGY for short), Google's command-line-based agentic development environment that makes it easy to use coding agents.
+
+But before we launch Antigravity, we'll download a starter repo from Github that contains various skills and configurations that will make this lab easier to complete:
+
+```bash
+git clone https://github.com/cszhu/build-with-gemini
+cd build-with-gemini
+```
+
+Inside this repo, you'll find an `.agents` directory with some pre-written skills and MCP configuration. 
+![](images/hidden-skills.png)
+
+When we load Antigravity in the next step, it will automatically check this folder and load the skills and MCP into its environment.
 
 > **What is a skill?** A bundle of instructions that teaches your coding agent how to do a specific task well. It loads automatically when it's relevant, so you get expert behavior without spelling out every step yourself.
 
+> **What's an MCP?** Model Context Protocol (MCP) is a standard way to plug external tools and data sources into your coding agent. An MCP *server* gives the agent a new ability — e.g. searching Google's official documentation, working with databases.
 
-To download it:
+The skills you just downloaded are specific to this Lab, but to help us develop agents more generally, we'll install skills using **[agents-cli](https://google.github.io/agents-cli/guide/getting-started/)**--a toolkit designed to make building agents on Google Cloud easy:
 
 ```bash
-git clone https://github.com/dalequark/gemini-world-track-3
-cd gemini-world-track-3
+agents-cli setup --skip-auth
 ```
+![](agents-cli-setup-screenshot)
 
-From this new folder (`gemini-world-track-3`), run Antigravity CLI in the Cloud Shell.
+> **What is agents-cli?** Google's CLI for the full agent development lifecycle (scaffold, deploy, evaluate, and publish), built on the [Agent Development Kit (ADK)](https://google.github.io/adk-docs/).
+
+## Launching Antigravity
+Next we'll launch Antigravity:
 
 ```bash
 agy
 ```
 
-When asked, **choose option 2 to authenticate with a Google Cloud project** and complete the sign in flow. Make sure to use the userid, password, project id and region provided with your Qwiklab credentials.
+When asked, **choose option 2 to authenticate with a Google Cloud project** and complete the sign in flow with the provided credentials.
 ![](images/agy-cloud-login.png)
 
 > **Avoid agent confusion!** In this workshop, we'll be _building_ an agent with the help of an _additional_ agent--specifically, with the coding agent Antigravity (AGY). It's helpful to keep this distinction in mind as we go through the lab.
 
-On startup, AGY will scan the existing `.agents/skills/` folder and load the workshop skills automatically. To see your installed skills, run `/skills` in AGY. You should see three skills listed:
+Let's check that the skills and MCP we configured in the last step have been picked up by Antigravity. We can view skills by running the `/skills` command **in Antigravity**:
 
 ![](images/verify-skills.png)
 
-## Your Pre-Configured Tools
-
-Beyond skills, your workshop environment comes pre-wired with the tools you'll need to build agents on Google Cloud — no manual installation required. These load automatically when AGY starts up inside the `gemini-world-track-3` folder.
-
 > **Why skills matter:** by packaging the right steps and context up front, skills save tokens and time and improve accuracy — the agent completes a task in fewer steps, instead of rediscovering (and sometimes getting wrong) the workflow every time.
 
-> **What's an MCP?** Model Context Protocol (MCP) is a standard way to plug external tools and data sources into your coding agent. An MCP *server* gives the agent a new ability — here, searching Google's official documentation and working directly with Firebase.
-
-Here's what's already set up for you:
-
-- **[agents-cli](https://google.github.io/agents-cli/guide/getting-started/)** — Google's CLI for the full agent development lifecycle (scaffold, deploy, evaluate, and publish), built on the [Agent Development Kit (ADK)](https://google.github.io/adk-docs/). It's pre-installed on your workstation, and the skills it exposes load automatically.
-- **[Developer Knowledge MCP](https://codelabs.developers.google.com/developer-knowledge-mcp-antigravity)** — gives AGY **grounded, current knowledge of Google's official docs** (Google Cloud, Firebase, ADK, and the Agent Platform products you'll use later) instead of guessing commands, which keeps the later modules out of trial-and-error spirals.
-- **[Firebase MCP](https://firebase.google.com/docs/ai-assistance/mcp-server)** — lets AGY work directly with Firebase services like Firestore, which you'll use for persistent storage.
-
-Both MCPs are pre-configured in the repo's `.agents/mcp_config.json` and authenticate automatically with the credentials you just set up. Run `/mcp` in AGY to confirm both `firebase` and `google-developer-knowledge` are connected:
+Next let's verify our MCPs are installed by running `/mcp` in Antigravity:
 
 ![](images/verify-developer-mcp.png)
 
-## Verify your setup
+You should find (at least) two MCPs configured:
+- **[Developer Knowledge MCP](https://codelabs.developers.google.com/developer-knowledge-mcp-antigravity)** — gives AGY **grounded, current knowledge of Google's official docs** (Google Cloud, Firebase, ADK, and the Agent Platform products you'll use later) instead of guessing commands, which keeps the later modules out of trial-and-error spirals.
+- **[Firebase MCP](https://firebase.google.com/docs/ai-assistance/mcp-server)** — lets AGY work directly with Firebase services like Firestore, which you'll use for persistent storage.
 
-To verify our setup, tell AGY to:
-
-```
-Verify my setup.
-```
-
-This invokes the `troubleshoot-lab-setup` skill we downloaded earlier from Github  to confirm your environment is set up correctly.
+We're almost ready to start building, but first, let's check to make sure everything is set up correctly. Tell Antigravity to `Verify my setup`.
 
 ![](images/verify-setup.png)
+
+This invokes the `troubleshoot-lab-setup` skill we downloaded earlier from Github to confirm your environment is set up correctly. If anything is misconfigured, Antigravity should be able to resolve it on its own, or give you instructions to fix the setup.
+
+Your setup is complete--let's start building! 🎊
 
 ---
 
 # Build Your First Agent
 
-Later in this lab, you'll design your own bespoke agentic application. But for now, let's build and test a basic agent together.  Tell AGY to build a basic agent and run it locally.
+Later in this lab, you'll design your own bespoke agentic application. But for now, let's build and test a basic agent together. Tell AGY to build a basic agent and run it locally.
 
 ```
 Use agents-cli to build a simple agent I can test and run it locally.
 ```
-
-<!-- > **What are Sessions and Memory?**
-> - A **Session** is a single conversation thread — the messages exchanged, plus a little scratch data (*state*) the agent tracks *during that chat*. 
-> - **Memory** are bits of data an agent can save an look up *across* sessions (e.g. "this customer is gluten-free"). It lives in its own  searchable store — the managed option is **Vertex AI Memory Bank** — and you turn it on explicitly (we do this in Part 2). -->
 
 When it's done, AGY should produce something like:
 
