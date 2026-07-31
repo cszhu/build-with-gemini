@@ -524,4 +524,31 @@ Why a GIF? Committed alongside your code and referenced with a plain relative pa
 
 Now your repo has a proper front door: a clear description, a feature list, and a looping demo of your agent in action — the perfect thing to link when someone asks *"what did you build?"*
 
-Congratulations — you've designed, built, equipped, evaluated, deployed, *and* shared a complete agentic application.
+# Publish to GitHub & Submit for Swag
+
+Everything you've built so far lives in this **workstation, which is temporary** — when the lab ends, it goes away, and your code with it. So the last step is to push your project to **your own personal GitHub** so you keep it forever, can share it, and can submit it for **swag** (a crewneck) and a shot at the **Build with Gemini project gallery**.
+
+This uses the `publish-to-github` skill, which creates a repo on *your* GitHub account and pushes your project to it. Tell AGY:
+
+```
+Publish my project to GitHub and submit it for swag.
+```
+
+Here's what happens, and where you stay in control:
+
+1. **You sign in to your own GitHub.** AGY runs the GitHub CLI, which prints a **one-time code** and the URL [github.com/login/device](https://github.com/login/device). Open that on *any* device (your laptop or phone), sign in to **your personal GitHub**, and enter the code. This keeps your GitHub identity completely separate from the lab's Google Cloud credentials.
+
+   > **Note:** you're signing in with *your own* GitHub account here — not the Qwiklabs lab account. The repo lands on your personal profile so it's yours to keep after the lab.
+
+2. **AGY asks before it pushes.** Before creating the repo or pushing anything, AGY confirms the repo name and shows you what it's about to do. **Nothing is pushed to your account without your say-so** — so don't just blindly approve; check the repo name and that it's your account first.
+
+3. **Your repo goes public.** The repo is created **public** so it can be featured in the gallery and shared on social. AGY writes a `.gitignore` and scans for secrets before committing, so credentials don't get pushed.
+
+When it's done, AGY prints your new repo's URL and a **pre-filled submission form** with your repo link already filled in. Open it, add the details only you know (your registration name/email, whether you've claimed your GDP badge, and whether you consent to be featured), and submit:
+
+- **Everyone who submits** is eligible for the swag (crewneck) and GDP badge redemption.
+- **Standout projects** get hand-picked by the team and featured — with a link to your repo — in the **Build with Gemini track 3 GitHub gallery**.
+
+That's it: your code is safely on your own GitHub, and you're in the running to be featured.
+
+Congratulations — you've designed, built, equipped, evaluated, deployed, shared, *and* published a complete agentic application.
