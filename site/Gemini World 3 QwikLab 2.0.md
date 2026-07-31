@@ -185,7 +185,7 @@ Clicking in, we can see the extended tool suite available for monitoring our age
 ![](images/view-deployment-4.png)
 
 
-# Design Your Own Agentic Application
+# Design Your App
 
 So far we've built and deployed an extremely simple agent--basically, a chatbot. In this next section, we'll evolve **that same agent** into an application of your own design, augmenting it with capabilities like:
 - Calling tools (i.e. running code, calling an API, interacting with a database)
@@ -224,7 +224,7 @@ Now that you have a brief, rename your existing agent project to match the app y
 Use the newly created project_brief.md to rename my existing agent project to match it: rename the project folder and update the name in agents-cli-manifest.yaml and pyproject.toml. Keep the code in app/ unchanged, and don't deploy or change any agent logic yet.
 ```
 
-# Add Persistent Storage for App Data
+# Add Persistent Storage
 
 Depending on your application, you may require an external data store, like:
 
@@ -304,11 +304,11 @@ You can also inspect your corpus and its indexed files in the console [here](htt
 
 ![The Vertex AI RAG Engine showing your corpus and its indexed documents](images/culpeper-retreival.png)
 
-# Generative AI (Image Generation)
-Tools can also give your agent the power of Google's generative AI models. A great one to reach for is image generation with `gemini-2.5-flash-image`, which turns a short text prompt into an image so your agent can create visuals on demand. It runs in the `global` region. You can read about it here: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/2-5-flash-image
+# Generate Images
+Tools can also give your agent the power of Google's generative AI models. A great one to reach for is image generation with `gemini-3.1-flash-lite-image` (Nano Banana 2 Lite), Google's fastest image model, which turns a short text prompt into an image so your agent can create visuals on demand. It runs in the `global` region. You can read about it here: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite-image
 
 ```
-Add a tool that generates an image for an item in my agent's domain (look at my project_brief.md) using the gemini-2.5-flash-image model in the global region. Do two things with the generated image: (1) save it with tool_context.save_artifact so it shows up in the Playground's Artifacts panel, and (2) upload the same image bytes to the public Cloud Storage bucket I created earlier and return its public https URL (https://storage.googleapis.com/<bucket>/<object>) from the tool. Hardcode the bucket name as a string, the same way we hardcoded the Firestore project. Do not write the image to a local file and return a path. Use the Developer Knowledge MCP to confirm the API if you're unsure.
+Add a tool that generates an image for an item in my agent's domain (look at my project_brief.md) using the gemini-3.1-flash-lite-image model in the global region. Do two things with the generated image: (1) save it with tool_context.save_artifact so it shows up in the Playground's Artifacts panel, and (2) upload the same image bytes to the public Cloud Storage bucket I created earlier and return its public https URL (https://storage.googleapis.com/<bucket>/<object>) from the tool. Hardcode the bucket name as a string, the same way we hardcoded the Firestore project. Do not write the image to a local file and return a path. Use the Developer Knowledge MCP to confirm the API if you're unsure.
 ```
 
 The tool does two things because each output has a different use. The saved artifact shows in the Playground's Artifacts panel, which is a quick way to see the image while you develop. The public URL is what you use later: your agent can put it in an A2UI Image component to show the picture inside a card, and your frontend can load it. The Artifacts panel only works inside the Playground, so the public URL is what makes the image visible elsewhere.
@@ -360,7 +360,7 @@ A card can also show an image. Add an `Image` component and set its URL to the p
 
 One important setting: **turn Token Streaming OFF** in the Playground (the toggle in its settings). With streaming on, the dev UI shows the raw streamed JSON and never swaps in the card. If you still see raw JSON after that, check that the callback is wired up and that you are on version 0.8, then hard-refresh and start a new session. (If the Playground in your environment still won't render it, you can run the dev UI directly with `uv run adk web --port 8080 --allow_origins "*" --reload_agents`.)
 
-# Building a Frontend
+# Build a Frontend
 
 Up to now you've tested everything in the ADK playground, and that's been your agent's "face" while you built out storage, tools, media, and A2UI. Now, let's give your agent a shareable web face and ship it to the cloud.
 
@@ -442,7 +442,7 @@ gcloud run deploy <your-frontend-name> \
 
 Open the Cloud Run URL and chat with your deployed agent. That's the full loop: agent on Agent Platform, frontend on Cloud Run, talking to each other.
 
-# Make Your Frontend Your Own
+# Customize Your Frontend
 
 Your whole UI lives in one file, `frontend/static/index.html`: a chat page with a title, a header, and an accent color. Ask AGY to restyle it. A few things to try:
 
