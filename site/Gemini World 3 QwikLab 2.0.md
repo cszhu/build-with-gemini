@@ -165,22 +165,6 @@ On the top bar of the screen, we can view our existing sessions and create new o
 **Sessions** consist of the log of messages in a current conversation, as well as a scratchpad of temporary state which can view in the state tab:
 ![](images/playground-state.png)
 
-## Adding Memory
-
-While **sessions** store information about a current conversation, sometimes we want to remember facts _between_ sessions. Example: if a customer tells a shopping agent he hates the color red, that fact should be present across _all_ future sessions.
-
-We can enable this cross-session remembering with Agent Platform's [Memory Bank](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank). It works like this: every time the user sends the agent a message, Memory Bank analyzes the conversation and automatically extracts and remembers factual snippets that might be useful to future conversations. To enable it:
-
-```Consult agents-cli and add a Memory Bank feature to my agent. Wire it up so the agent saves salient details automatically and looks them up on future turns.```
-
-Depending on your application, you can be more specific:
-
-```Consult agents-cli and add a Memory Bank feature to my agent. Ensure my agent remembers all stated user preferences. Wire it up so the agent saves salient details automatically and looks them up on future turns.```
-
-You can test it in Playground by telling your agent a fact about yourself. Then, view the stored memory in the Cloud Console [here](https://console.cloud.google.com/agent-platform/memory-bank):
-
-![Agent Platform forming a new memory from the conversation](images/apothecary-memory.png)
-
 ## Deploy to Agent Platform
 
 Deploying our agent to Google Cloud is as simple as telling Antigravity to deploy our agent to Agent Platform:
@@ -238,7 +222,33 @@ Now that you have a brief, rename your existing agent project to match the app y
 Use the newly created project_brief.md to rename my existing agent project to match it: rename the project folder and update the name in agents-cli-manifest.yaml and pyproject.toml. Keep the code in app/ unchanged, and don't deploy or change any agent logic yet.
 ```
 
+# Add Memory
+
+While **sessions** store information about a current conversation, sometimes we want to remember facts _between_ sessions. Example: if a customer tells a shopping agent he hates the color red, that fact should be present across _all_ future sessions.
+
+We can enable this cross-session remembering with Agent Platform's [Memory Bank](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank). Every time the user sends the agent a message, Memory Bank analyzes the conversation and automatically extracts and remembers factual snippets that might be useful to future conversations.
+
+Let's tell AGY to set up memory using its skill:
+
+```
+Use the memory-bank-setup skill to add memory to my agent using a Vertex AI Memory Bank instance. Then rewrite my agent to use the new memory service and redeploy.
+```
+
+Depending on your application, you can be more specific about what to remember:
+
+```
+Configure memory so that all user allergies are remembered.
+```
+
+To try it out, chat with your agent and tell it a durable fact about yourself (for example, a preference). Memory Bank extracts memories in the background after the turn. You can then see the stored memories in the Agent Platform UI [here](https://console.cloud.google.com/agent-platform/memory-bank):
+
+![A memory stored in the Agent Platform Memory Bank UI](images/apothecary-memory.png)
+
+If you don't see any memories logged here, you may need ask Antigravity to redeploy your agent.
+
 # Add Persistent Storage
+
+Memory Bank is perfect for remembering conversational facts about a *user* — their preferences, details they've mentioned, how they like to be addressed. But it's not a general-purpose database. For your app's actual *data* — the things it looks up and writes to, that aren't tied to one user's conversation (a product catalog, a booking, an inventory count, generated images) — you'll want dedicated persistent storage.
 
 Depending on your application, you may require an external data store, like:
 
