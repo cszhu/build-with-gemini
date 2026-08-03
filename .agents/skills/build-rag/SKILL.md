@@ -6,7 +6,8 @@ description: >
   "build a RAG store", "ground my agent on documents", "add retrieval to my
   agent", or hits Spanner/allowlist errors creating a corpus. Covers GCS upload,
   serverless-mode switch, the LLM parser (custom parsing prompt), import,
-  standalone retrieval testing, and the agent-side retrieval tool.
+  standalone retrieval testing, and exposing retrieval as a plain function tool
+  (required so it can coexist with A2UI / other function tools on Gemini 2.5).
 ---
 
 # Vertex AI RAG Engine — serverless corpus + ADK integration
@@ -59,6 +60,15 @@ gcloud services enable aiplatform.googleapis.com vectorsearch.googleapis.com --p
 # Put your source docs in a GCS bucket (HTML/PDF/TXT/Google Docs supported).
 gcloud storage cp ./my_docs/*.txt gs://your-bucket/rag/
 ```
+
+**SDK version:** use a **current** `google-cloud-aiplatform` (≥ 1.90; verified on
+1.163). The serverless-mode config and `rag.RagRetrievalConfig` used below do
+**not** exist in older releases — e.g. 1.71 raises
+`AttributeError: module 'vertexai.preview.rag' has no attribute 'RagRetrievalConfig'`.
+Installing `google-adk` may pin an older aiplatform, so upgrade explicitly:
+`pip install -U google-cloud-aiplatform`. (`vertexai.preview.rag` now emits a
+deprecation notice pointing to the newer `agentplatform` client; the preview
+namespace still works today.)
 
 ## Build the corpus
 
@@ -137,58 +147,96 @@ You can also test in the **Console**: Vertex AI → RAG Engine → your corpus �
 Retrieve panel. After import, allow a short indexing lag (retrieval can 404
 briefly even when the file shows `ACTIVE`).
 
-## Wire it into the agent (ADK)
+## Wire it into the agent (ADK) — expose retrieval as a plain function tool
 
-The agent accesses the corpus through a **retrieval tool**. In ADK use the
-built-in `VertexAiRagRetrieval`:
+The agent accesses the corpus through a **retrieval tool**. Wrap
+`rag.retrieval_query` in an ordinary Python function and register *that* as the
+agent's tool. **Do this instead of ADK's `VertexAiRagRetrieval`** — see the
+compatibility warning below for why this matters.
 
 ```python
 from google.adk.agents import Agent
-from google.adk.tools.retrieval import VertexAiRagRetrieval
-from vertexai.preview import rag
 
-rag_tool = VertexAiRagRetrieval(
-    name="retrieve_herbal_lore",
-    description="Search the herbal corpus for facts and recipes about a plant or ailment.",
-    rag_resources=[rag.RagResource(rag_corpus="projects/.../ragCorpora/NNN")],
-    similarity_top_k=5,
-    vector_distance_threshold=0.5,
-)
+CORPUS_NAME = "projects/.../ragCorpora/NNN"   # from create_rag_corpus.py
+
+def consult_docs(query: str) -> str:
+    """Search the herbal corpus and return matched passages.
+
+    Args:
+        query: What to look up (a plant, ailment, or recipe).
+    Returns:
+        The matched passages, or a note that none was found.
+    """
+    from vertexai.preview import rag
+    try:
+        resp = rag.retrieval_query(
+            text=query,
+            rag_resources=[rag.RagResource(rag_corpus=CORPUS_NAME)],
+            rag_retrieval_config=rag.RagRetrievalConfig(top_k=5),
+        )
+    except Exception as e:
+        return f"Retrieval failed: {e}"
+    contexts = getattr(resp.contexts, "contexts", [])
+    passages = [c.text.strip() for c in contexts if getattr(c, "text", "").strip()]
+    return "\n\n---\n\n".join(passages) or "No relevant passage found."
 
 agent = Agent(
     model="gemini-2.5-flash",
     name="apothecary",
-    instruction="Answer using the herbal corpus. Call retrieve_herbal_lore before answering.",
-    tools=[rag_tool],
+    instruction="Answer using the herbal corpus. Call consult_docs before answering.",
+    tools=[consult_docs],   # alongside any other tools, e.g. the A2UI toolset
 )
 ```
 
-At runtime the model decides when to call `retrieve_herbal_lore`; ADK executes
-`retrieval_query` against the corpus, feeds the top-k chunks back into the model,
-and the model composes a grounded answer. The `description` matters — it's how the
-model knows when to reach for the tool.
+At runtime the model decides when to call `consult_docs`; the function runs
+`retrieval_query` against the corpus and returns the top-k chunks as its result,
+which the model reads and composes a grounded answer from. The docstring matters —
+it's the tool's function declaration, so it's how the model knows when to reach
+for the tool.
+
+### ⚠️ Compatibility: do NOT use `VertexAiRagRetrieval` with other function tools
+
+ADK's `VertexAiRagRetrieval` (from `google.adk.tools.retrieval`) does **not**
+register as a normal function tool — it registers as Gemini's **built-in
+retrieval grounding tool**. Gemini 2.5 models (`gemini-2.5-flash` and
+`gemini-2.5-pro`) **reject any request that offers the built-in retrieval tool
+alongside ordinary function declarations on the turn that carries a
+`functionResponse`**. So the moment your agent has *any* other function tool —
+e.g. the A2UI toolset (`SendA2uiToClientToolset` / `send_a2ui_to_client`) — the
+combination is illegal.
+
+- **Symptom:** the first model request succeeds; the failure appears on the
+  follow-up turn right after the first tool call returns — a bare
+  `400 Bad Request ... INVALID_ARGUMENT` with no field detail. It looks
+  intermittent/mysterious and burns a lot of debugging time.
+- **The fix is the plain function tool above** — retrieval becomes just another
+  function declaration, no built-in grounding tool is in the request, and the mix
+  is legal on any model/version.
+- **Don't** "fix" it by switching to a drifting alias like `gemini-flash-latest`;
+  it happens to tolerate the mix today but is unreliable. Teach against the pinned
+  2.5 models.
+- This is the general rule, not a RAG quirk: **no built-in tool** (retrieval,
+  Google Search grounding, code execution) can share a request with function
+  declarations. Expose the capability as a function tool whenever you also need
+  function calling.
 
 **Region gotcha (common in production):** a serverless corpus is `us-central1`
 only, but your agent's model often runs elsewhere (e.g. `GOOGLE_CLOUD_LOCATION=global`).
-`VertexAiRagRetrieval` runs `retrieval_query` against whatever region the
-**aiplatform SDK** is initialized to — if that's not the corpus's region you get
-`MethodNotImplemented / 404`. The genai model client (env-based) and ADK
-session/memory services (explicit `location=`) do NOT use the aiplatform SDK's
-initializer, so you can safely pin just the RAG client to the corpus region:
+`rag.retrieval_query` runs against whatever region the **aiplatform SDK** is
+initialized to — if that's not the corpus's region you get `MethodNotImplemented / 404`.
+The genai model client (env-based) and ADK session/memory services (explicit
+`location=`) do NOT use the aiplatform SDK's initializer, so you can safely pin
+just the RAG client to the corpus region:
 
 ```python
 import vertexai
 # region parsed from projects/<p>/locations/<region>/ragCorpora/<id>
-vertexai.init(project="...", location="us-central1")  # before building the tool
+vertexai.init(project="...", location="us-central1")  # before the first retrieval_query
 ```
 
 To steer the model on *how* to answer, put it in the agent instruction, e.g.:
 "When you rely on the Herbal's words, quote the passage verbatim in quotation
 marks and name it as Culpeper's Complete Herbal; otherwise paraphrase."
-
-**Alternative (Gemini native grounding, no ADK):** pass a retrieval tool straight
-to a `GenerativeModel` via `Tool.from_retrieval(rag.Retrieval(rag.VertexRagStore(...)))`.
-Same corpus, retrieval handled inside `generate_content` instead of as an agent tool.
 
 ## Troubleshooting
 
@@ -199,3 +247,7 @@ Same corpus, retrieval handled inside `generate_content` instead of as an agent 
   `vectorsearch.googleapis.com`, wait ~1 min, retry.
 - `NOT_FOUND No vertex rag corpus found` right after import → indexing lag; retry
   after a few seconds.
+- Bare `400 ... INVALID_ARGUMENT` (no field detail) on the turn right after the
+  first tool call returns → you're mixing `VertexAiRagRetrieval` (built-in
+  grounding tool) with function tools. Expose retrieval as a plain function tool
+  instead (see the compatibility warning above).
