@@ -32,17 +32,17 @@ Today, we'll be developing in a [Workstation](https://cloud.google.com/workstati
 You should have a workstation pre-provisioned. Just click launch!
 ![](images/launch_workstation.png)
 
- We'll do all our development here, in what's called "Code OSS" (i.e. the Cloud Shell Editor within a Workstation):
+ We'll do all our development here, in what's called "Code OSS" (i.e. the Editor within a Workstation):
 ![](images/workstation_developer_interface.png)
 
-> **Important** Make sure you are using Code OSS from within a Workstation. If you try to use Cloud Shell outside of a Workstation, you'll quickly run out of resources.
+> **Important** Make sure you are using Code OSS from within a Workstation. If you try to use the terminal outside of a Workstation, you'll quickly run out of resources.
 
 Click the button in the upper right hand corner to open a terminal:
 ![](images/open-terminal.png)
 
 ## Authenticate
 
-In Cloud Shell, run the following commands to set up authentication using your provided credentials. Do NOT use your personal credentials.
+In the terminal, run the following commands to set up authentication using your provided credentials. Do NOT use your personal credentials.
 
 ```bash
 gcloud auth login --update-adc
@@ -133,7 +133,7 @@ We can then tell AGY to test our agent from the command line:
 Test my agent with the message, "What's the weather in New York?"
 ```
 
-Now let's take a look at the code Antigravity generated to create this agent. You can view it in the Cloud Shell Editor. To get there, click Open Editor:
+Now let's take a look at the code Antigravity generated to create this agent. You can view it in the Editor. To get there, click Open Editor:
 
 ![](images/open-editor.png)
 
