@@ -254,7 +254,7 @@ If you don't see any memories logged here, you may need ask Antigravity to redep
 
 # Add Persistent Storage
 
-Memory Bank is perfect for remembering conversational facts about a *user* — their preferences, details they've mentioned, how they like to be addressed. But it's not a general-purpose database. For your app's actual *data* — the things it looks up and writes to, that aren't tied to one user's conversation (a product catalog, a booking, an inventory count, generated images) — you'll want dedicated persistent storage.
+Memory Bank is great for remembering conversational facts about a user: their preferences, details they've mentioned, how they like to be addressed. It's not a general-purpose database. For your app's actual data — the things it looks up and writes to, that aren't tied to one user's conversation, like a product catalog, a booking, an inventory count, or generated images — you'll want dedicated persistent storage.
 
 Depending on your application, you may require an external data store, like:
 
