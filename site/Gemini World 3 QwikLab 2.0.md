@@ -111,7 +111,9 @@ We're almost ready to start building, but first, let's check to make sure everyt
 Verify my setup.
 ```
 
-![](images/verify-setup.png)
+![](images/verify-setup2.png)
+
+Your output might look a little different than the screenshot above — for example, it might show a deployment step — but as long as it says you're good to go, you're probably good to go.
 
 This invokes the `troubleshoot-lab-setup` skill we downloaded earlier from Github to confirm your environment is set up correctly. If anything is misconfigured, Antigravity should be able to resolve it on its own, or give you instructions to fix the setup.
 
@@ -136,10 +138,6 @@ We can then tell AGY to test our agent from the command line:
 ```
 Test my agent with the message, "What's the weather in New York?"
 ```
-
-Now let's take a look at the code Antigravity generated to create this agent. You can view it in the Editor. To get there, click Open Editor:
-
-![](images/open-editor.png)
 
 We can find the logic for our agent in the file `app/agent.py`:
 ![](images/cloud-shell-editor.png)
