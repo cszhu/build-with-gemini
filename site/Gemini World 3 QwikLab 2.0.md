@@ -52,6 +52,8 @@ In the terminal, run the following commands to set up authentication using your 
 gcloud auth login --update-adc
 ```
 
+![](images/gcloud-auth-terminal.png)
+
 ## Installing Skills and MCPs
 In this lab, we'll generate code with **Antigravity CLI** (AGY for short), Google's command-line-based agentic development environment that makes it easy to use coding agents.
 
