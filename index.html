@@ -876,13 +876,15 @@ Suggest some UI improvements we can make to the frontend.
 You've built the full loop. To take it further, pick from the stretch menu in your project_brief.md. A few ideas:
 
 - Video previews with Omni: generate a short video clip instead of a still image.
-- More tools, richer A2UI cards, or session memory that remembers a returning user.
+- Check out Cloud Trace: your deployed agent already exports traces, so you can see the full execution flow — every LLM call and tool call — for each request.
 - Keep customizing the frontend to match your brand.
 
-To try video generation:
+[Omni](https://ai.google.dev/gemini-api/docs/omni) (`gemini-omni-flash-preview`) is Google's video model: it generates video from text or a reference image, and you can keep editing the result with follow-up prompts instead of starting over from scratch. It also reasons about physics and real-world context, so motion in the clip looks physically plausible instead of uncanny.
+
+To try video generation with Omni:
 
 ```
-Add a tool that generates a short video for an item in my agent's domain (look at my project_brief.md) using Google's Omni model (gemini-omni-flash-preview) in the global region. Save the video as an artifact. Use the Developer Knowledge MCP to confirm the API.
+Add a tool that generates a short video for an item in my agent's domain (look at my project_brief.md) using Google's Omni model (gemini-omni-flash-preview) in the global region. Do two things with the generated video: (1) save it with tool_context.save_artifact so it shows up in the Playground's Artifacts panel, and (2) upload the same video bytes to the public Cloud Storage bucket I created earlier and return its public https URL (https://storage.googleapis.com/<bucket>/<object>) from the tool. Hardcode the bucket name as a string, the same way we hardcoded the Firestore project. Do not write the video to a local file and return a path. Use the Developer Knowledge MCP to confirm the API if you're unsure.
 ```
 
 # Share What You Built
