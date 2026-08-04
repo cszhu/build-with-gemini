@@ -113,7 +113,7 @@ Verify my setup.
 
 ![](images/verify-setup2.png)
 
-Your output might look a little different than the screenshot above — for example, it might show a deployment step — but as long as it says you're good to go, you're probably good to go.
+Your output might look a little different than the screenshot above, but as long as it says you're good to go, you're probably good to go.
 
 This invokes the `troubleshoot-lab-setup` skill we downloaded earlier from Github to confirm your environment is set up correctly. If anything is misconfigured, Antigravity should be able to resolve it on its own, or give you instructions to fix the setup.
 
