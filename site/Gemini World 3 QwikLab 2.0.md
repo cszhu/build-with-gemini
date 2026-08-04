@@ -9,7 +9,7 @@ You will:
 - Evaluate and improve the quality of your agent's responses
 - Deploy your agent to Agent Platform
 - Equip your agent with the power to use Google's Generative Models
-- Build an agent-first frontend, hosted on Cloud Run and powered by A2UI
+- Build an agent-first frontend, hosted on Cloud Run and powered by [A2UI](https://a2ui.org/)
 
 # Set Up Your Environment
 
