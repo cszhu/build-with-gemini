@@ -670,7 +670,7 @@ Create a Cloud Storage bucket for this project. Give it a name that fits my app 
 
 To confirm your bucket was created, find it here: [https://console.cloud.google.com/storage](https://console.cloud.google.com/storage).
 
-In the image-generation step below, your agent uploads each generated image to this bucket and gets back a public URL. A public URL is a plain `https` link that any browser can load, so the image can appear inside your agent's A2UI cards and in your custom frontend.
+In the image-generation step below, your agent uploads each generated image to this bucket and gets back a public URL. A public URL is a plain `https` link that any browser can load, so the image can be displayed anywhere your agent's responses show up — including the rich UI cards and custom frontend you'll build later in this lab.
 
 # Add Tools
 
@@ -720,7 +720,7 @@ Tools can also give your agent the power of Google's generative AI models. A gre
 Add a tool that generates an image for an item in my agent's domain (look at my project_brief.md) using the gemini-3.1-flash-lite-image model in the global region. Do two things with the generated image: (1) save it with tool_context.save_artifact so it shows up in the Playground's Artifacts panel, and (2) upload the same image bytes to the public Cloud Storage bucket I created earlier and return its public https URL (https://storage.googleapis.com/<bucket>/<object>) from the tool. Hardcode the bucket name as a string, the same way we hardcoded the Firestore project. Do not write the image to a local file and return a path. Use the Developer Knowledge MCP to confirm the API if you're unsure.
 ```
 
-The tool does two things because each output has a different use. The saved artifact shows in the Playground's Artifacts panel, which is a quick way to see the image while you develop. The public URL is what you use later: your agent can put it in an A2UI Image component to show the picture inside a card, and your frontend can load it. The Artifacts panel only works inside the Playground, so the public URL is what makes the image visible elsewhere.
+The tool does two things because each output has a different use. The saved artifact shows in the Playground's Artifacts panel, which is a quick way to see the image while you develop. The public URL is what you use later: your agent can drop it into the rich UI cards you'll add later in this lab to show the picture, and your frontend can load it. The Artifacts panel only works inside the Playground, so the public URL is what makes the image visible elsewhere.
 
 Now ask your agent to generate an image for one of the items in your domain. You should get back a real image, which appears in the Artifacts panel.
 ![](images/image-generation-food.png)
