@@ -196,7 +196,12 @@
     transition: background .15s, color .15s;
   }
   .sidebar a:hover { background: var(--color-surface-container-highest); color: var(--color-on-surface); }
+  /* Active nav item picks up the Google 4-color rotation assigned to its section (see .section-color-N below) */
   .sidebar a.active { background: var(--color-secondary-container); color: var(--color-on-secondary-container); font-weight: 700; }
+  .sidebar a.active.section-color-0 { background: var(--color-primary-container); color: var(--color-on-primary-container); }
+  .sidebar a.active.section-color-1 { background: var(--color-error-container); color: var(--color-on-error-container); }
+  .sidebar a.active.section-color-2 { background: var(--color-warning-container); color: var(--color-on-warning-container); }
+  .sidebar a.active.section-color-3 { background: var(--color-tertiary-container); color: var(--color-on-tertiary-container); }
   .sidebar-footer { padding: .875rem 1.25rem; border-top: 1px solid var(--color-outline-variant); font-size: .7rem; color: var(--color-on-surface-variant); }
   .reload-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background: var(--color-tertiary); margin-right:.4rem; vertical-align:middle; transition:opacity .3s; }
 
@@ -235,6 +240,11 @@
     font-family: var(--font-brand); font-size: 1.75rem; font-weight: 500; margin: 2.75rem 0 1rem;
     padding-bottom: .5rem; border-bottom: 2px solid var(--color-primary); color: var(--color-on-surface); scroll-margin-top: 1rem; letter-spacing: -.25px;
   }
+  /* Section headers rotate through the same 4 Google colors as the hero divider */
+  #content h1.section-color-0 { border-bottom-color: var(--color-primary); }
+  #content h1.section-color-1 { border-bottom-color: var(--color-error); }
+  #content h1.section-color-2 { border-bottom-color: var(--color-warning); }
+  #content h1.section-color-3 { border-bottom-color: var(--color-tertiary); }
   #content h1:first-child { margin-top: .5rem; }
   #content h2 { font-family: var(--font-brand); font-size: 1.35rem; font-weight: 500; margin: 2rem 0 .85rem; color: var(--color-on-surface); scroll-margin-top: 1rem; }
   #content h3, #content h4 { font-family: var(--font-brand); font-weight: 500; margin: 1.4rem 0 .6rem; color: var(--color-on-surface); }
@@ -1039,12 +1049,16 @@ Congratulations! You've designed, built, equipped, evaluated, deployed, shared, 
     heads.forEach((h, i) => {
       const id = h.id || slugify(h.textContent) || ("sec-" + i);
       h.id = id;
+      // Rotate through the same 4 Google colors used in the hero divider (blue/red/yellow/green)
+      const colorClass = "section-color-" + (i % 4);
+      h.classList.add(colorClass);
       // Flag empty TODO sections visually
       let label = cleanLabel(h.textContent);
       const a = document.createElement("a");
       a.href = "#" + id;
       a.textContent = label;
       a.dataset.target = id;
+      a.classList.add(colorClass);
       if (/todo/i.test(label)) { a.style.color = "#f0a35e"; }
       toc.appendChild(a);
     });
