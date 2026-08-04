@@ -60,8 +60,7 @@ In this lab, we'll generate code with **Antigravity CLI** (AGY for short), Googl
 But before we launch Antigravity, we'll download a starter repo from Github that contains various skills and configurations that will make this lab easier to complete:
 
 ```bash
-git clone https://github.com/cszhu/build-with-gemini
-cd build-with-gemini
+git clone https://github.com/cszhu/build-with-gemini && cd build-with-gemini
 ```
 
 Inside this repo, you'll find an `.agents` directory with some pre-written skills and MCP configuration. 
