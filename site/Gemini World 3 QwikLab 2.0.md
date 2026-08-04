@@ -171,7 +171,9 @@ On the top bar of the screen, we can view our existing sessions and create new o
 
 Deploying our agent to Google Cloud is as simple as telling Antigravity to deploy our agent to Agent Platform:
 
-```Deploy my agent to agent platform.```
+```
+Deploy my agent to agent platform.
+```
 
 ![](images/agent-deploy.png)
 
