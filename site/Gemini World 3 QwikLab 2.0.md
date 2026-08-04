@@ -239,6 +239,8 @@ While **sessions** store information about a current conversation, sometimes we 
 
 We can enable this cross-session remembering with Agent Platform's [Memory Bank](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank). Every time the user sends the agent a message, Memory Bank analyzes the conversation and automatically extracts and remembers factual snippets that might be useful to future conversations.
 
+> **Important** Memory Bank only works with a **deployed** agent — memories are extracted server-side on Agent Platform, not when you run the agent locally in the Playground. Everything in this section assumes you've deployed your agent and are chatting with the **deployed** agent in the browser. If you're testing locally, deploy first (`redeploy`) and use the deployed agent, or you won't see any memories.
+
 Let's tell AGY to set up memory using its skill:
 
 ```
