@@ -756,11 +756,15 @@ Use the enable-a2ui skill to add A2UI to my agent: build the system prompt with 
 
 One thing to watch: pin A2UI to version 0.8. The callback recognizes v0.8 messages, so if the schema manager emits v0.9 the callback never fires and you are back to raw JSON.
 
-Now test it in the same Playground you have been using. The Playground is really the ADK dev UI (`agents-cli playground` runs `adk web` for you), and it comes with a built-in A2UI renderer. It only renders A2UI once the callback is in place, so restart the Playground to pick up your changes:
+### Validating A2UI locally before redeploying
+
+Test it in the same Playground you have been using. The Playground is really the ADK dev UI (`agents-cli playground` runs `adk web` for you), and it comes with a built-in A2UI renderer. It only renders A2UI once the callback is in place, so restart the Playground to pick up your changes:
 
 ```bash
 Restart the agent playground so it picks up my latest changes.
 ```
+
+This restart is **local only**: it reloads the Playground process on your machine, not the agent you already deployed to Agent Platform. Redeploying takes several minutes, so don't do it after every small change — verify A2UI here first. You'll push everything you've built (storage, tools, media, sandbox, and A2UI) to the deployed agent in one shot later, in the **Redeploy your finished agent** step.
 
 Start a new session, then ask for something that fits a card or table. For a store agent, "Show me what's in stock" might render a table, and "Tell me about this item" might render a card. Adapt the question to whatever your agent knows about. You should see real UI instead of JSON.
 ![](images/a2ui-in-adk-playground.png)
@@ -952,6 +956,8 @@ What happens, and where you stay in control:
    > **Note:** sign in with *your own* GitHub account, not the Qwiklabs lab account. The repo lands on your personal profile so it's yours to keep after the lab.
 
 2. **AGY asks before it pushes.** Before creating the repo or pushing anything, AGY confirms the repo name and shows you what it's about to do. **Nothing is pushed to your account without your say-so.** Don't blindly approve; check the repo name and that it's your account first.
+
+   > **Name your repo `buildwithgemini-[YOUR-APP-NAME]`** (for example, `buildwithgemini-recipe-assistant`). AGY proposes this name by default, but if you rename it, keep this format — it's what registration staff look for when you show them your public repo to redeem your crewneck.
 
 3. **Your repo goes public.** The repo is created **public** so it can be featured in the gallery and shared on social. AGY writes a `.gitignore` and scans for secrets before committing, so credentials don't get pushed.
 
