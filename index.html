@@ -754,7 +754,7 @@ Ask AGY to set up both. This uses the `enable-a2ui` skill, which ships the callb
 Use the enable-a2ui skill to add A2UI to my agent: build the system prompt with A2uiSchemaManager (version 0.8) and the Basic Catalog, copy in a2ui_utils.py, and wire it up as an after_model_callback.
 ```
 
-One thing to watch: pin A2UI to version 0.8. The callback recognizes v0.8 messages, so if the schema manager emits v0.9 the callback never fires and you are back to raw JSON.
+One thing to watch: the callback only recognizes v0.8 messages, so if the schema manager emits v0.9 instead, the callback never fires and you're back to raw JSON.
 
 ### Validating A2UI locally before redeploying
 
