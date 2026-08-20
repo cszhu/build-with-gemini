@@ -489,9 +489,17 @@ We can also test our agent in the **Playground** — a local, browser-based chat
 Launch agent playground for me.
 ```
 
-Antigravity will launch Playground on a local port. Access it by clicking the "Open Preview" button in the lower right hand side of the screen:
+AGY launches the Playground in the background and reports the local URL it's running on — usually `http://localhost:8080`:
 
-![](images/playground-port.png)
+![](images/launch-agent-playground.png)
+
+To open it, use the browser inside your remote desktop. Click the **Chrome** icon in the desktop's taskbar:
+
+![](images/open-chrome.png)
+
+Then paste the Playground URL (`http://localhost:8080`) into Chrome's address bar and press Enter. You'll land on the ADK Dev UI, where you can chat with your agent:
+
+![](images/playground-in-chrome-localhost.png)
 
 Here you can chat with our agent from a UI. On the left hand side of the screen, we can see what tools our agent has access to. Depending on how you told AGY to create an agent, your agent may have some basic tools (in this case, `get_weather`). These are blocks of deterministic, functional code your agent can call to complete tasks. We'll add more later.
 
@@ -653,14 +661,10 @@ Sometimes your agent needs to answer from a reference document — a product man
 
 Under the hood, the corpus is built once — your documents are chunked, embedded, and stored in a managed vector database. Your agent then reaches the corpus through a **retrieval tool**, the same kind of tool you just added, but backed by semantic search over your own documents.
 
-To try this out, find or create a reference document. A .txt file is simplest. We'll use an [old-timey medical guide](https://www.gutenberg.org/cache/epub/49513/pg49513.txt) from Project Gutenberg. First upload your document:
-
-![Uploading the reference document](images/upload_file.png)
-
-Now ask AGY to build the corpus and wire retrieval into your agent. This uses the `rag-engine-setup` skill, which creates a **serverless** RAG corpus (the cheapest, no-allowlist option) and adds the retrieval tool for you:
+To try this out, we need a reference document. A `.txt` file is simplest. We'll use an [old-timey medical guide](https://www.gutenberg.org/cache/epub/49513/pg49513.txt) from Project Gutenberg. Rather than downloading it by hand, point AGY straight at the URL — it will fetch the file into your project and index it in one step. This uses the `rag-engine-setup` skill, which creates a **serverless** RAG corpus (the cheapest, no-allowlist option) and adds the retrieval tool for you:
 
 ```
-Use the rag-engine-setup skill to ground my agent on the document <your_document_path_here>: create a serverless Vertex AI RAG corpus, import and index the file, then add a retrieval tool so my agent answers from the corpus.
+Download https://www.gutenberg.org/cache/epub/49513/pg49513.txt into my project, then use the rag-engine-setup skill to ground my agent on that file: create a serverless Vertex AI RAG corpus, import and index the file, then add a retrieval tool so my agent answers from the corpus.
 ```
 
 Building the corpus takes a few minutes — the files are parsed, chunked, and embedded before the index is ready. When it's done, test it in the Playground by asking something that can only be answered from your documents. Adapt the question to your domain (for a recipe agent: *"What's a good remedy for a cough?"*; for a policy bot: *"What's the refund window?"*). The agent should call the retrieval tool and answer from the retrieved passages rather than making something up.
