@@ -393,37 +393,31 @@ For this lab, you'll be given access to a temporary GCP environment plus a **rem
 
 > **Avoid agent confusion!** In this workshop, we'll be _building_ an agent with the help of an _additional_ agent — specifically, the coding agent Antigravity (AGY). It's helpful to keep this distinction in mind as we go.
 
-On the Qwiklab page, after you click "Start Lab," you should have access to **Credentials Reference** on the left-hand side of the screen:
-
-![](images/view_temp_credentials.png)
-
-Here you'll find your temporary **username**, **password**,  **Project ID**, and more.
-
 ## Open the Google Cloud console
 
-Right-click **Open Google Cloud console** and select **"Open Link in Incognito Window"**. Using an incognito window keeps the lab's credentials separate from any personal Google account you may be signed into:
+For this lab, you'll be given access to a temporary GCP environment with ephemeral credentials. Start by registering with your email on the Explore page:
 
-![](images/open_cloudconsole_incognito.png)
+![](images/login-screen.png)
 
-When you click this link, you should be logged in automatically. If not, sign in with the **username** and **password** from your Credentials Reference. Do NOT use your personal credentials. You should see this screen:
+Once you're in, expand **Credentials Reference** to find your temporary username, password, and project ID:
 
-![](images/temp_gcp.png)
+![](images/findcreds1.png)
 
-Later, we'll interface with various Cloud services through this portal. But for now, let's access your development environment.
+Noting your credentials, right click **Antigravity in a VM** and select "**Open Link in Incognito Window**":
 
-## Open your remote desktop
+![](images/incognito1.png)
 
-In the **same incognito window**, open the **Antigravity Remote Session** URL from your Credentials Reference. This loads your virtual desktop — a full Linux environment running right in your browser, with Antigravity 2.0 pre-installed:
+When you see the pop-up about seeing text and images copied to the clip board, Select "Accept." This will allow you to copy and paste prompts from these instructions into Antigravity.
 
-![](images/open_incognito.png)
+![](images/ag-allow.png)
 
-The first time the desktop loads, your browser will ask for permission to share the clipboard so you can copy and paste between your machine and the remote desktop. Click **Allow**:
 
-![](images/allow_copy_paste.png)
+> **Note:** DO NOT click the X button in the upper right corner.  If you do, You will need to: Open the terminal using Application launcher > System > Konsole and paste following command `/opt/venv/bin/python3 /config/automata/bin/ag_autologin.py --force` If you are in this situation and aren't familiar with how to do this, raise your hand to ask a TA for assistance!
 
-> **Important** Do all your work inside this remote desktop. It's a fully provisioned machine with the resources this lab needs.
+Click on **Google Cloud Console** button to open the GCP console.
 
-> **Note:** DO NOT click the X button in the upper right corner. If you do, you will need to open the terminal using Application launcher > System > Konsole and paste: `/opt/venv/bin/python3 /config/automata/bin/ag_autologin.py --force` If you aren't familiar with how to do this, raise your hand to ask a TA for assistance!
+![](images/gcp-console.png)
+
 
 Antigravity 2.0 is already open and waiting with a new conversation:
 
@@ -440,7 +434,7 @@ Download and setup https://github.com/cszhu/build-with-gemini
 ```
 ![](images/download_github_skills.png)
 
-Antigravity will ask permission before it runs `git clone`. Allow it — choosing an "always allow" option saves you from re-approving `git` commands later:
+Antigravity may ask permission before it runs `git clone`. Allow it — choosing an "always allow" option saves you from re-approving `git` commands later:
 
 
 ![](images/allow_github_clone.png)
