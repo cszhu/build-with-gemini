@@ -49,6 +49,8 @@ The first time the desktop loads, your browser will ask for permission to share 
 
 > **Important** Do all your work inside this remote desktop. It's a fully provisioned machine with the resources this lab needs.
 
+> **Note:** DO NOT click the X button in the upper right corner. If you do, you will need to open the terminal using Application launcher > System > Konsole and paste: `/opt/venv/bin/python3 /config/automata/bin/ag_autologin.py --force` If you aren't familiar with how to do this, raise your hand to ask a TA for assistance!
+
 Antigravity 2.0 is already open and waiting with a new conversation:
 
 ![](images/agy20hello.png)
