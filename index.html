@@ -651,6 +651,112 @@ Implement the tool we just discussed as a function tool and add it to my agent. 
 
 Test it in the agent playground or debug screen. Ask it to do something that the tool is able to do, and the agent should be able to call the tool. You should be able to confirm this trace in the logs. 
 
+# Find and Add Your Own APIs
+
+The tool you just added ran your own code. But a tool can also reach out to the
+wider web and pull in live data from someone else's service. That's the
+difference between an agent that *mocks* data (invents a plausible-looking answer
+like "here's a sample weather report") and one that returns the real thing. If
+your app needs facts you don't have (the weather, a plant's care instructions, a
+location on a map, an exchange rate), there's probably an API for it, and wiring
+it into a tool is often a single HTTP call.
+
+For example, if you're building a gardening app,
+[Perenual](https://perenual.com/docs/api) has 10,000+ plant species (watering,
+sunlight, hardiness zones) behind a free API key.
+
+Two kinds of API you'll run into:
+
+- **Free, no-key APIs.** Call them straight from a tool with a plain HTTP
+  request, no signup. Great for prototyping.
+- **Key-required APIs.** You register (usually free for low volume), get an API
+  key, and send it with each request.
+
+## Where to find free APIs
+
+You don't have to know an API exists already. A couple of directories are worth
+browsing:
+
+- **[public-apis](https://github.com/public-apis/public-apis)** (~390k GitHub
+  stars). ~50 categories in one big table, with an `Auth` column (`No` means no
+  key needed).
+- **[APIsList](https://apislist.com/)**. Hand-checked, with filters for free,
+  no-key, and open-source APIs, plus a live/broken status on each.
+
+Some need no signup at all. For example,
+`curl "https://api.open-meteo.com/v1/forecast?latitude=40.71&longitude=-74.00&current_weather=true"`
+returns live weather, and `curl "https://api.frankfurter.dev/v1/latest?base=USD"`
+returns exchange rates.
+
+Let AGY do the searching and wiring. It can look at your project, pick an API
+that fits, and build the tool that calls it:
+
+```
+Look at my project_brief.md. Find a free public API that fits my app's domain
+(browse the public-apis directory at https://github.com/public-apis/public-apis),
+then add a function tool that calls it and returns real data. Keep the
+implementation minimal, and if the API needs a key, read it from an environment
+variable rather than hardcoding it.
+```
+
+Test it in the Playground by asking something that can only be answered from the
+live API. In the trace you'll see the tool fire, the HTTP call go out, and the
+agent answer from real data instead of making it up.
+
+## Example API Integration with Google Maps
+
+Location features like "find coffee shops near me," "how far is it," and "what's
+the address of this place" are a natural fit for **Google Maps Platform**, and a
+good example of a key-required API. Agents like to *mock* this ("the nearest cafe
+is 0.3 miles away"), so calling the real API is a genuine upgrade.
+
+Maps needs an API key, and the project needs **billing enabled** first. Without
+billing, requests are throttled to about one a day; with it, each API has a
+monthly free tier before it starts charging. The APIs you're most likely to want
+are **[Geocoding](https://developers.google.com/maps/documentation/geocoding)**
+for turning an address into coordinates,
+**[Routes](https://developers.google.com/maps/documentation/routes)** for
+distances and travel times, and
+**[Places (New)](https://developers.google.com/maps/documentation/places/web-service/overview)**
+for searching real places.
+
+To get a key, in the [Cloud Console](https://console.cloud.google.com/):
+
+1. Enable the APIs you need, for example
+   [Geocoding API](https://console.cloud.google.com/apis/library/geocoding-backend.googleapis.com)
+   and [Places API (New)](https://console.cloud.google.com/apis/library/places.googleapis.com).
+   (Or let AGY enable them for you; see the prompt below.)
+2. On the [Credentials](https://console.cloud.google.com/apis/credentials) page,
+   click **Create credentials → API key**.
+3. Restrict the key to those APIs. For a backend, use an IP address restriction
+   rather than HTTP referrers.
+4. Copy the key. You'll hand it to AGY in the next step so it can wire it in as
+   the `GOOGLE_MAPS_API_KEY` environment variable. Keep it out of your source
+   files; the `publish-to-github` skill flags a hardcoded key before it reaches
+   GitHub.
+
+Then have AGY enable the APIs, store your key, and build the tool. Paste your key
+in place of `PASTE_KEY_HERE`:
+
+```
+First, enable the Geocoding and Places (New) APIs on my project. Here's my Maps
+API key: PASTE_KEY_HERE. Set it as the GOOGLE_MAPS_API_KEY environment variable
+for my agent; don't hardcode it in a source file. Then add a tool that uses the
+Geocoding API to turn an address into coordinates, and one that uses the Places
+API (New) to find nearby places of a given type. Call the REST endpoints
+directly and return the key fields (name, address, location). Use the Developer
+Knowledge MCP to confirm the exact endpoints and required headers.
+```
+
+Test it with something location-based ("Find parks near Seattle") and watch the
+tool hit the live Maps endpoint in the trace.
+
+> **In the lab environment:** enabling Maps needs billing on the project. If your
+> temporary lab project can't, use a free no-key API from above for now and come
+> back to Maps on your own Google Cloud project later (new accounts get a $300
+> free trial credit that covers it). The pattern is the same for any key-based
+> API: enable it, get a key, store it in an env var, call it from a tool.
+
 # Ground Your Agent with RAG
 
 Sometimes your agent needs to answer from a reference document — a product manual, a policy handbook, a collection of recipes, a set of research papers — that's too large to paste into a prompt. **RAG (Retrieval-Augmented Generation)** solves this: you index your documents into a **corpus**, and at runtime your agent retrieves only the most relevant passages and grounds its answer on them, instead of guessing.
