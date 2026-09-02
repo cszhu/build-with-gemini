@@ -93,7 +93,7 @@ async def generate_memories_callback(callback_context: CallbackContext):
 
 
 root_agent = Agent(
-    model="gemini-2.5-flash",
+    model="gemini-3.6-flash",
     name="root_agent",
     instruction=(
         "You are a helpful assistant. You remember the user's stated "
