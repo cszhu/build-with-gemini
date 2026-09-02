@@ -47,13 +47,12 @@ ENTRY_DESC="entry.82550013"       # Brief Project Description
 #   entry.1722955442 Full Name        entry.281180358  Email Address
 #   entry.86658339   GDP badge claim   entry.1609312251 Consent to be featured
 
-# Upstream lab repos the participant may have cloned (full owner/repo paths). If
-# the project's origin still points at one of these, we start a fresh history so
-# the published repo is the participant's own. Matching the FULL owner/repo path
+# Upstream lab repo the participant may have cloned (full owner/repo path). If
+# the project's origin still points at it, we start a fresh history so the
+# published repo is the participant's own. Matching the FULL owner/repo path
 # (not just the repo name) means a participant's own same-named repo is not
 # mistaken for the upstream on a re-run.
 LAB_UPSTREAM_MATCH_1="cszhu/build-with-gemini"
-LAB_UPSTREAM_MATCH_2="dalequark/gemini-world-track-3"
 
 info() { printf '\033[1;34m›\033[0m %s\n' "$*"; }
 ok()   { printf '\033[1;32m✓\033[0m %s\n' "$*"; }
@@ -161,7 +160,7 @@ reset_git_history() {
     origin_url="$(git remote get-url origin 2>/dev/null || echo "")"
   fi
   case "$origin_url" in
-    *"$LAB_UPSTREAM_MATCH_1"*|*"$LAB_UPSTREAM_MATCH_2"*)
+    *"$LAB_UPSTREAM_MATCH_1"*)
       info "This folder is still the cloned lab repo ($origin_url)."
       info "Starting a fresh git history for your own repo — your files are unchanged."
       rm -rf .git
