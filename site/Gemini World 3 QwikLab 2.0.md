@@ -620,7 +620,7 @@ On success it prints `SUCCESS: Recording saved to <path>`, leaving a branded `.w
 A demo is even better with a landing page. Ask AGY to generate a README that tells the story of your app and shows the clip you just recorded — as a **GIF**, which is the no-fuss way to get a demo playing in a README:
 
 ```
-Generate a README.md for my project that describes what my agent does (use my project_brief.md) and lists its key features and the Google Cloud tools it uses (Memory Bank, Firestore, Cloud Storage, RAG, image generation, A2UI). Convert my demo recording to an optimized, looping GIF and embed it near the top with a relative path so it plays inline.
+Generate a README.md for my project. Describe what my agent actually does based on the code in this repo — read app/ and agents-cli-manifest.yaml to see which tools and Google Cloud services are really wired up (Memory Bank, Firestore, Cloud Storage, RAG, image generation, A2UI) and list ONLY those. Don't claim a capability the code doesn't implement; if something in my project_brief.md was planned but not finished, leave it out or mark it clearly as "planned, not yet implemented." Do NOT put any live links to localhost (like http://localhost:8080) or to ephemeral Cloud URLs (Cloud Run / Agent Engine endpoints from this lab) in the README — they die when this workstation is torn down and will 404 for anyone reading it later. If you need to show how to run it, write it as setup/run instructions (the commands to start it locally), not as a clickable link. Then convert the demo I recorded with record-demo (the .webm file) to an optimized, looping GIF and embed it near the top with a relative path so it plays inline — use only that real recording; if there isn't one, leave the demo out rather than generating or drawing a placeholder.
 ```
 
 Why a GIF? Committed alongside your code and referenced with a plain relative path (`![demo](demo.gif)`), it renders and loops automatically on GitHub — no uploads, no special links. Keep the original `.webm` as your high-quality **social asset**: X, LinkedIn, and Slack all play an uploaded video natively.
@@ -653,7 +653,7 @@ What happens, and where you stay in control:
 
 When it's done, AGY prints your new repo's URL and a **pre-filled submission form** with your repo link already filled in. Open it, add the details only you know (your registration name/email, whether you've claimed your GDP badge, and whether you consent to be featured), and submit:
 
-- **Everyone who submits** is eligible for the swag (crewneck) and GDP badge redemption.
+- Submitting the form is how you enter for swag and the project gallery — the form itself lists the current eligibility terms.
 - **Standout projects** get hand-picked by the team and featured (with a link to your repo) in the **Build with Gemini track 3 GitHub gallery**.
 
 Congratulations! You've designed, built, equipped, evaluated, deployed, shared, *and* published a complete agentic application.
