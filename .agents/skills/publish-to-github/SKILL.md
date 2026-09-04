@@ -48,6 +48,16 @@ Run everything from the **project root** (where `app/` / `project_brief.md` /
 `agents-cli-manifest.yaml` live). Ideally the participant has already done the
 "Share What You Built" step, so a `README.md` and demo GIF are in the repo.
 
+> **Honesty over polish.** A not-yet-working project is fine to publish — a
+> dishonest one is not. If you (re)generate the README, ground it in the actual
+> code (`app/`, `agents-cli-manifest.yaml`): list only the tools/services really
+> wired up, and mark planned-but-unfinished features as such. The demo GIF must
+> be a real `record-demo` recording of the running app — never a drawn or
+> AI-synthesized mock-up. Don't inflate claims to make the project look more
+> complete than it is. Strip any live links to `localhost` or ephemeral lab Cloud
+> URLs (Cloud Run / Agent Engine) from the README — they 404 once the workstation
+> is gone; give run instructions instead of a dead clickable link.
+
 ## Step 1 — Prep (install gh, stage, scan). No commit, no push.
 
 ```bash
@@ -135,9 +145,15 @@ Tell the participant to open it and add the fields only they can answer — thei
 **registration name & email**, whether they've **claimed their GDP badge**, and
 whether they **consent to be featured** — then submit.
 
+Before they submit, remind them submissions are reviewed for honesty: it's fine
+to submit a project that isn't fully working, as long as the README describes
+what the agent actually does *and* doesn't (yet), and any demo is a real
+recording rather than a mock-up.
+
 Then explain the payoff:
 
-- **Everyone who submits** is eligible for the swag (a crewneck) and GDP badge redemption.
+- Submitting the form is how they enter for swag and the project gallery — the
+  form itself states the current eligibility terms.
 - **Standout projects** are hand-picked by the team and featured (with a link to
   their repo) in the **Build with Gemini track 3 GitHub gallery**. This skill does
   not touch the gallery repo — the team curates it from submissions.
