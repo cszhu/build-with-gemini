@@ -145,11 +145,6 @@ Tell the participant to open it and add the fields only they can answer — thei
 **registration name & email**, whether they've **claimed their GDP badge**, and
 whether they **consent to be featured** — then submit.
 
-Submitting the form is how they enter for swag and the project gallery (the form
-states the current eligibility terms). Standout projects are hand-picked by the
-team and featured in the **Build with Gemini track 3 GitHub gallery** — this
-skill doesn't touch that repo; the team curates it from submissions.
-
 ## Troubleshooting
 
 | Symptom | Fix |
