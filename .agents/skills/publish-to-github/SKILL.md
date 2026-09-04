@@ -145,18 +145,10 @@ Tell the participant to open it and add the fields only they can answer — thei
 **registration name & email**, whether they've **claimed their GDP badge**, and
 whether they **consent to be featured** — then submit.
 
-Before they submit, remind them submissions are reviewed for honesty: it's fine
-to submit a project that isn't fully working, as long as the README describes
-what the agent actually does *and* doesn't (yet), and any demo is a real
-recording rather than a mock-up.
-
-Then explain the payoff:
-
-- Submitting the form is how they enter for swag and the project gallery — the
-  form itself states the current eligibility terms.
-- **Standout projects** are hand-picked by the team and featured (with a link to
-  their repo) in the **Build with Gemini track 3 GitHub gallery**. This skill does
-  not touch the gallery repo — the team curates it from submissions.
+Submitting the form is how they enter for swag and the project gallery (the form
+states the current eligibility terms). Standout projects are hand-picked by the
+team and featured in the **Build with Gemini track 3 GitHub gallery** — this
+skill doesn't touch that repo; the team curates it from submissions.
 
 ## Troubleshooting
 
