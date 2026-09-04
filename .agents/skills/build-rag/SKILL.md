@@ -7,7 +7,7 @@ description: >
   agent", or hits Spanner/allowlist errors creating a corpus. Covers GCS upload,
   serverless-mode switch, the LLM parser (custom parsing prompt), import,
   standalone retrieval testing, and exposing retrieval as a plain function tool
-  (required so it can coexist with A2UI / other function tools on Gemini 2.5).
+  (required so it can coexist with A2UI / other function tools).
 ---
 
 # Vertex AI RAG Engine — serverless corpus + ADK integration
@@ -115,7 +115,7 @@ resp = rag.import_files(
     transformation_config=rag.TransformationConfig(
         chunking_config=rag.ChunkingConfig(chunk_size=512, chunk_overlap=100)),
     llm_parser=rag.LlmParserConfig(
-        model_name="gemini-2.5-flash",
+        model_name="gemini-3.6-flash",
         custom_parsing_prompt=PARSING_PROMPT),
 )
 print("imported:", resp.imported_rag_files_count)
@@ -181,7 +181,7 @@ def consult_docs(query: str) -> str:
     return "\n\n---\n\n".join(passages) or "No relevant passage found."
 
 agent = Agent(
-    model="gemini-2.5-flash",
+    model="gemini-3.6-flash",
     name="apothecary",
     instruction="Answer using the herbal corpus. Call consult_docs before answering.",
     tools=[consult_docs],   # alongside any other tools, e.g. the A2UI toolset
@@ -198,10 +198,9 @@ for the tool.
 
 ADK's `VertexAiRagRetrieval` (from `google.adk.tools.retrieval`) does **not**
 register as a normal function tool — it registers as Gemini's **built-in
-retrieval grounding tool**. Gemini 2.5 models (`gemini-2.5-flash` and
-`gemini-2.5-pro`) **reject any request that offers the built-in retrieval tool
-alongside ordinary function declarations on the turn that carries a
-`functionResponse`**. So the moment your agent has *any* other function tool —
+retrieval grounding tool**. Gemini models **reject any request that offers the
+built-in retrieval tool alongside ordinary function declarations on the turn that
+carries a `functionResponse`**. So the moment your agent has *any* other function tool —
 e.g. the A2UI toolset (`SendA2uiToClientToolset` / `send_a2ui_to_client`) — the
 combination is illegal.
 
@@ -213,8 +212,8 @@ combination is illegal.
   function declaration, no built-in grounding tool is in the request, and the mix
   is legal on any model/version.
 - **Don't** "fix" it by switching to a drifting alias like `gemini-flash-latest`;
-  it happens to tolerate the mix today but is unreliable. Teach against the pinned
-  2.5 models.
+  it happens to tolerate the mix today but is unreliable. Teach against a pinned
+  model (e.g. `gemini-3.6-flash`).
 - This is the general rule, not a RAG quirk: **no built-in tool** (retrieval,
   Google Search grounding, code execution) can share a request with function
   declarations. Expose the capability as a function tool whenever you also need
