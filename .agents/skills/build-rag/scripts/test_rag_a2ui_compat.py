@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Minimal reproducer: RAG retrieval + another function tool on Gemini 2.5.
+"""Minimal reproducer: RAG retrieval + another function tool on Gemini.
 
 Proves that exposing retrieval as a PLAIN FUNCTION TOOL (`consult_docs`) coexists
 with other function tools across a full two-turn (tool-call + follow-up)
@@ -28,7 +28,7 @@ import asyncio
 import os
 import sys
 
-MODEL = os.environ.get("MODEL", "gemini-2.5-flash")
+MODEL = os.environ.get("MODEL", "gemini-3.6-flash")
 PROJECT = os.environ.get("GOOGLE_CLOUD_PROJECT")
 RAG_CORPUS = os.environ.get("RAG_CORPUS")
 
