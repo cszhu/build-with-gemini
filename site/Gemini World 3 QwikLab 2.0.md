@@ -19,31 +19,7 @@ For this lab, you'll be given access to a temporary GCP environment plus a **rem
 
 > **Avoid agent confusion!** In this workshop, we'll be _building_ an agent with the help of an _additional_ agent — specifically, the coding agent Antigravity (AGY). It's helpful to keep this distinction in mind as we go.
 
-## Open the Google Cloud console
-
-For this lab, you'll be given access to a temporary GCP environment with ephemeral credentials. Start by registering with your email on the Explore page:
-
-![](images/login-screen.png)
-
-Once you're in, expand **Credentials Reference** to find your temporary username, password, and project ID:
-
-![](images/findcreds1.png)
-
-Noting your credentials, right click **Antigravity in a VM** and select "**Open Link in Incognito Window**":
-
-![](images/incognito1.png)
-
-When you see the pop-up about seeing text and images copied to the clip board, Select "Accept." This will allow you to copy and paste prompts from these instructions into Antigravity.
-
-![](images/ag-allow.png)
-
-
-> **Note:** DO NOT click the X button in the upper right corner.  If you do, You will need to: Open the terminal using Application launcher > System > Konsole and paste following command `/opt/venv/bin/python3 /config/automata/bin/ag_autologin.py --force` If you are in this situation and aren't familiar with how to do this, raise your hand to ask a TA for assistance!
-
-Click on **Google Cloud Console** button to open the GCP console.
-
-![](images/gcp-console.png)
-
+## Open Antigravity 2.0
 
 Antigravity 2.0 is already open and waiting. **Make sure you start with a new conversation before continuing:**
 
