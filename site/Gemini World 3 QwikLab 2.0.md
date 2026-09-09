@@ -631,6 +631,8 @@ Now your repo has a proper front door: a clear description, a feature list, and 
 
 # Publish to GitHub & Submit for Swag
 
+**This section is optional.** Do it only if you want to keep your code so you can work on it later, or share it. If you're done, feel free to skip it.
+
 Everything you've built so far lives on this remote desktop, and the desktop is temporary. When the lab ends, it goes away, and your code with it. So the last step is to push your project to **your own personal GitHub** so you keep it, can share it, and can submit it for **swag** (a crewneck) and a shot at the **Build with Gemini** project gallery.
 
 This uses the `publish-to-github` skill, which creates a repo on *your* GitHub account and pushes your project to it. Tell AGY:
@@ -657,3 +659,15 @@ When it's done, AGY prints your new repo's URL and a **pre-filled submission for
 - **Standout projects** get hand-picked by the team and featured (with a link to your repo) in the **Build with Gemini track 3 GitHub gallery**.
 
 Congratulations! You've designed, built, equipped, evaluated, deployed, shared, *and* published a complete agentic application.
+
+# Earn a Skill Badge
+
+Now that you've finished the workshop, you can earn an official **Build with Gemini** Skill Badge for your Google Developer Profile. It's an Intermediate quiz that takes about **30 minutes** and confirms what you learned here.
+
+Claim it today:
+
+[Claim your Build with Gemini Skill Badge](https://developers.google.com/profile/badges/events/community/build-with-gemini/track3-software-developer/award?utm_source=events-with-google&utm_medium=et&utm_campaign=FY26-Q3-BuildwithGemini&utm_content=track3_appbuilders&utm_term=-)
+
+Or scan the QR code to open it on your phone:
+
+![Scan to earn your Build with Gemini Skill Badge](images/skill-badge-qr.png)
