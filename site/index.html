@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gemini World · Track 3 — Lab</title>
+<title>Build with Gemini · Track 3 — Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Text:wght@400;500;700&family=Google+Sans:wght@400;500;700&family=Google+Sans+Mono:wght@400&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -343,7 +343,7 @@
 </button>
 <aside class="sidebar">
   <div class="sidebar-header">
-    <div class="title">Gemini World · Track 3</div>
+    <div class="title">Build with Gemini · Track 3</div>
     <div class="subtitle">Build an agent-first app</div>
   </div>
   <nav id="toc"></nav>
@@ -354,8 +354,8 @@
 
 <div class="main">
   <div class="hero">
-    <div class="hero-track">Build with Gemini World Tour · Track 3</div>
-    <h1 id="hero-title">Gemini World 3 Lab</h1>
+    <div class="hero-track">Lab Guide</div>
+    <h1 id="hero-title">Build with Gemini · Track 3</h1>
     <p class="hero-sub">Prototype, equip, evaluate, and deploy your own agent-first application on Google Cloud.</p>
   </div>
   <div class="container">
@@ -442,10 +442,6 @@
       else if (/SCREENSHOT|DEMO/.test(t)) bq.classList.add("ph-image");
       else if (/TODO:/.test(t)) bq.classList.add("ph-todo");
     });
-
-    // Hero title from first H1
-    const firstH1 = content.querySelector("h1");
-    if (firstH1) document.getElementById("hero-title").textContent = cleanLabel(firstH1.textContent);
 
     // Build sidebar from H1s; assign ids for anchoring
     const toc = document.getElementById("toc");
@@ -537,7 +533,7 @@
   const inlineEl = document.getElementById("md-inline");
   const inlineMd = inlineEl ? inlineEl.textContent.trim() : "";
   if (inlineMd) {
-    document.getElementById("footer-status").textContent = "Gemini World · Track 3";
+    document.getElementById("footer-status").textContent = "Build with Gemini · Track 3";
     render(inlineMd);
   } else {
     load(true);

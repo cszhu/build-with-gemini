@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gemini World · Track 3 — Lab</title>
+<title>Build with Gemini · Track 3 — Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Text:wght@400;500;700&family=Google+Sans:wght@400;500;700&family=Google+Sans+Mono:wght@400&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -351,7 +351,7 @@
 </button>
 <aside class="sidebar">
   <div class="sidebar-header">
-    <div class="title">Gemini World · Track 3</div>
+    <div class="title">Build with Gemini · Track 3</div>
     <div class="subtitle">Build an agent-first app</div>
   </div>
   <nav id="toc"></nav>
@@ -362,8 +362,8 @@
 
 <div class="main">
   <div class="hero">
-    <div class="hero-track">Build with Gemini World Tour · Track 3</div>
-    <h1 id="hero-title">Gemini World 3 Lab</h1>
+    <div class="hero-track">Lab Guide</div>
+    <h1 id="hero-title">Build with Gemini · Track 3</h1>
     <p class="hero-sub">Prototype, equip, evaluate, and deploy your own agent-first application on Google Cloud.</p>
   </div>
   <div class="container">
@@ -620,7 +620,7 @@ You can watch the data live in your Firestore database [here](https://console.cl
 
 ![The Firestore data viewer in the Firebase console shows your seeded collection.](images/firestore.png)
 
-## Store Files in Cloud Storage
+## Store files in Cloud Storage
 
 Firestore is great for structured records, but for raw files — images, audio, video — you'll want **Cloud Storage**. This is handy when your agent generates media that you want to persist and serve publicly, for example so your frontend can embed it as an image.
 
@@ -651,7 +651,7 @@ Implement the tool we just discussed as a function tool and add it to my agent. 
 
 Test it in the agent playground or debug screen. Ask it to do something that the tool is able to do, and the agent should be able to call the tool. You should be able to confirm this trace in the logs. 
 
-# Find and Add Your Own APIs
+# Call External APIs
 
 The tool you just added ran your own code. But a tool can also reach out to the
 wider web and pull in live data from someone else's service. That's the
@@ -703,7 +703,7 @@ Test it in the Playground by asking something that can only be answered from the
 live API. In the trace you'll see the tool fire, the HTTP call go out, and the
 agent answer from real data instead of making it up.
 
-## Example API Integration with Google Maps
+## Example: Google Maps
 
 Location features like "find coffee shops near me," "how far is it," and "what's
 the address of this place" are a natural fit for **Google Maps Platform**, and a
@@ -757,26 +757,6 @@ tool hit the live Maps endpoint in the trace.
 > free trial credit that covers it). The pattern is the same for any key-based
 > API: enable it, get a key, store it in an env var, call it from a tool.
 
-# Ground Your Agent with RAG
-
-Sometimes your agent needs to answer from a reference document — a product manual, a policy handbook, a collection of recipes, a set of research papers — that's too large to paste into a prompt. **RAG (Retrieval-Augmented Generation)** solves this: you index your documents into a **corpus**, and at runtime your agent retrieves only the most relevant passages and grounds its answer on them, instead of guessing.
-
-Under the hood, the corpus is built once — your documents are chunked, embedded, and stored in a managed vector database. Your agent then reaches the corpus through a **retrieval tool**, the same kind of tool you just added, but backed by semantic search over your own documents.
-
-To try this out, we need a reference document. A `.txt` file is simplest. We'll use an [old-timey medical guide](https://www.gutenberg.org/cache/epub/49513/pg49513.txt) from Project Gutenberg. Rather than downloading it by hand, point AGY straight at the URL — it will fetch the file into your project and index it in one step. This uses the `rag-engine-setup` skill, which creates a **serverless** RAG corpus (the cheapest, no-allowlist option) and adds the retrieval tool for you:
-
-```
-Download https://www.gutenberg.org/cache/epub/49513/pg49513.txt into my project, then use the rag-engine-setup skill to ground my agent on that file: create a serverless Vertex AI RAG corpus, import and index the file, then add a retrieval tool so my agent answers from the corpus.
-```
-
-Building the corpus takes a few minutes — the files are parsed, chunked, and embedded before the index is ready. When it's done, test it in the Playground by asking something that can only be answered from your documents. Adapt the question to your domain (for a recipe agent: *"What's a good remedy for a cough?"*; for a policy bot: *"What's the refund window?"*). The agent should call the retrieval tool and answer from the retrieved passages rather than making something up.
-
-You can watch this happen in the Playground's trace: the retrieval tool fires, returns the top matching chunks, and the model composes a grounded answer from them.
-
-You can also inspect your corpus and its indexed files in the console [here](https://console.cloud.google.com/agent-platform/rag):
-
-![The Vertex AI RAG Engine showing your corpus and its indexed documents](images/culpeper-retreival.png)
-
 # Generate Images
 Tools can also give your agent the power of Google's generative AI models. A great one to reach for is image generation with `gemini-3.1-flash-lite-image` (Nano Banana 2 Lite), Google's fastest image model, which turns a short text prompt into an image so your agent can create visuals on demand. It runs in the `global` region. You can read about it here: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite-image
 
@@ -820,7 +800,7 @@ Use the enable-a2ui skill to add A2UI to my agent: build the system prompt with 
 
 One thing to watch: the callback only recognizes v0.8 messages, so if the schema manager emits v0.9 instead, the callback never fires and you're back to raw JSON.
 
-### Validating A2UI locally before redeploying
+## Validate A2UI locally before redeploying
 
 Test it in the same Playground you have been using. The Playground is really the ADK dev UI (`agents-cli playground` runs `adk web` for you), and it comes with a built-in A2UI renderer. It only renders A2UI once the callback is in place, so restart the Playground to pick up your changes:
 
@@ -871,7 +851,7 @@ Using the build-agent-frontend skill, copy its minimal FastAPI proxy and chat UI
 
 (If your project already has a web frontend you'd rather keep, tell AGY to adapt that one to the same proxy pattern instead of creating a new one.)
 
-## Test Locally
+## Test locally
 
 Before deploying the frontend, confirm that your code can reach your agent that is currently deployed on Agent Platform. Running locally means the frontend server runs on your machine instead of Cloud Run, but it talks to the same deployed agent. This catches wiring issues before you ship to Cloud Run.
 
@@ -994,7 +974,7 @@ On success it prints `SUCCESS: Recording saved to <path>`, leaving a branded `.w
 A demo is even better with a landing page. Ask AGY to generate a README that tells the story of your app and shows the clip you just recorded — as a **GIF**, which is the no-fuss way to get a demo playing in a README:
 
 ```
-Generate a README.md for my project. Describe what my agent actually does based on the code in this repo — read app/ and agents-cli-manifest.yaml to see which tools and Google Cloud services are really wired up (Memory Bank, Firestore, Cloud Storage, RAG, image generation, A2UI) and list ONLY those. Don't claim a capability the code doesn't implement; if something in my project_brief.md was planned but not finished, leave it out or mark it clearly as "planned, not yet implemented." Do NOT put any live links to localhost (like http://localhost:8080) or to ephemeral Cloud URLs (Cloud Run / Agent Engine endpoints from this lab) in the README — they die when this workstation is torn down and will 404 for anyone reading it later. If you need to show how to run it, write it as setup/run instructions (the commands to start it locally), not as a clickable link. Then convert the demo I recorded with record-demo (the .webm file) to an optimized, looping GIF and embed it near the top with a relative path so it plays inline — use only that real recording; if there isn't one, leave the demo out rather than generating or drawing a placeholder.
+Generate a README.md for my project. Describe what my agent actually does based on the code in this repo — read app/ and agents-cli-manifest.yaml to see which tools and Google Cloud services are really wired up (Memory Bank, Firestore, Cloud Storage, image generation, A2UI) and list ONLY those. Don't claim a capability the code doesn't implement; if something in my project_brief.md was planned but not finished, leave it out or mark it clearly as "planned, not yet implemented." Do NOT put any live links to localhost (like http://localhost:8080) or to ephemeral Cloud URLs (Cloud Run / Agent Engine endpoints from this lab) in the README — they die when this workstation is torn down and will 404 for anyone reading it later. If you need to show how to run it, write it as setup/run instructions (the commands to start it locally), not as a clickable link. Then convert the demo I recorded with record-demo (the .webm file) to an optimized, looping GIF and embed it near the top with a relative path so it plays inline — use only that real recording; if there isn't one, leave the demo out rather than generating or drawing a placeholder.
 ```
 
 Why a GIF? Committed alongside your code and referenced with a plain relative path (`![demo](demo.gif)`), it renders and loops automatically on GitHub — no uploads, no special links. Keep the original `.webm` as your high-quality **social asset**: X, LinkedIn, and Slack all play an uploaded video natively.
@@ -1032,8 +1012,6 @@ When it's done, AGY prints your new repo's URL and a **pre-filled submission for
 - Submitting the form is how you enter for swag and the project gallery — the form itself lists the current eligibility terms.
 - **Standout projects** get hand-picked by the team and featured (with a link to your repo) in the **Build with Gemini track 3 GitHub gallery**.
 
-Congratulations! You've designed, built, equipped, evaluated, deployed, shared, *and* published a complete agentic application.
-
 # Earn a Skill Badge
 
 Now that you've finished the workshop, you can earn an official **Build with Gemini** Skill Badge for your Google Developer Profile. It's an Intermediate quiz that takes about **30 minutes** and confirms what you learned here.
@@ -1045,6 +1023,8 @@ Claim it today:
 Or scan the QR code to open it on your phone:
 
 ![Scan to earn your Build with Gemini Skill Badge](images/skill-badge-qr.png)
+
+Congratulations! You've designed, built, equipped, evaluated, deployed, shared, *and* published a complete agentic application.
 
 </script>
 <script>
@@ -1125,10 +1105,6 @@ Or scan the QR code to open it on your phone:
       else if (/SCREENSHOT|DEMO/.test(t)) bq.classList.add("ph-image");
       else if (/TODO:/.test(t)) bq.classList.add("ph-todo");
     });
-
-    // Hero title from first H1
-    const firstH1 = content.querySelector("h1");
-    if (firstH1) document.getElementById("hero-title").textContent = cleanLabel(firstH1.textContent);
 
     // Build sidebar from H1s; assign ids for anchoring
     const toc = document.getElementById("toc");
@@ -1220,7 +1196,7 @@ Or scan the QR code to open it on your phone:
   const inlineEl = document.getElementById("md-inline");
   const inlineMd = inlineEl ? inlineEl.textContent.trim() : "";
   if (inlineMd) {
-    document.getElementById("footer-status").textContent = "Gemini World · Track 3";
+    document.getElementById("footer-status").textContent = "Build with Gemini · Track 3";
     render(inlineMd);
   } else {
     load(true);
