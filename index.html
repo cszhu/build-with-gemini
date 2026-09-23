@@ -969,12 +969,12 @@ Now your repo has a proper front door: a clear description, a feature list, and 
 
 **This section is optional.** Do it only if you want to keep your code so you can work on it later, or share it. If you're done, feel free to skip it.
 
-Everything you've built so far lives on this remote desktop, and the desktop is temporary. When the lab ends, it goes away, and your code with it. So the last step is to push your project to **your own personal GitHub** so you keep it, can share it, and can submit it for **swag** (a crewneck) and a shot at the **Build with Gemini** project gallery.
+Everything you've built so far lives on this remote desktop, and the desktop is temporary. When the lab ends, it goes away, and your code with it. So the last step is to push your project to **your own personal GitHub** so you keep it, can share it, and have a shot at the **Build with Gemini** project gallery.
 
 This uses the `publish-to-github` skill, which creates a repo on *your* GitHub account and pushes your project to it. Tell AGY:
 
 ```
-Publish my project to GitHub and submit it for swag.
+Publish my project to GitHub. Don't generate the swag submission form.
 ```
 
 What happens, and where you stay in control:
@@ -985,14 +985,11 @@ What happens, and where you stay in control:
 
 2. **AGY asks before it pushes.** Before creating the repo or pushing anything, AGY confirms the repo name and shows you what it's about to do. **Nothing is pushed to your account without your say-so.** Don't blindly approve; check the repo name and that it's your account first.
 
-   > **Name your repo `buildwithgemini-[YOUR-APP-NAME]`** (for example, `buildwithgemini-recipe-assistant`). AGY proposes this name by default, but if you rename it, keep this format — it's what registration staff look for when you show them your public repo to redeem your crewneck.
+   > **Name your repo `buildwithgemini-[YOUR-APP-NAME]`** (for example, `buildwithgemini-recipe-assistant`). AGY proposes this name by default, but if you rename it, keep this format.
 
 3. **Your repo goes public.** The repo is created **public** so it can be featured in the gallery and shared on social. AGY writes a `.gitignore` and scans for secrets before committing, so credentials don't get pushed.
 
-When it's done, AGY prints your new repo's URL and a **pre-filled submission form** with your repo link already filled in. Open it, add the details only you know (your registration name/email, whether you've claimed your GDP badge, and whether you consent to be featured), and submit:
-
-- Submitting the form is how you enter for swag and the project gallery — the form itself lists the current eligibility terms.
-- **Standout projects** get hand-picked by the team and featured (with a link to your repo) in the **Build with Gemini track 3 GitHub gallery**.
+When it's done, AGY prints your new repo's URL.
 
 # Earn a Skill Badge
 
