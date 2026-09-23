@@ -15,7 +15,7 @@ You will:
 
 For this lab, you'll be given access to a temporary GCP environment plus a **remote virtual desktop** where you'll do all your development. Everything runs in the cloud — your code, your tools, and **Antigravity 2.0** (AGY for short), Google's agentic development environment.
 
-> **What is Antigravity?** Antigravity is Google's agentic IDE — an AI pair programmer you'll use to build, test, and deploy your agent.
+> **What is Antigravity?** Antigravity 2.0 is a standalone Google app where you work with AI agents that can run commands, read and write files, search the web, and use tools. In this lab, you'll use it to build, test, and deploy your agent.
 
 > **Avoid agent confusion!** In this workshop, we'll be _building_ an agent with the help of an _additional_ agent — specifically, the coding agent Antigravity (AGY). It's helpful to keep this distinction in mind as we go.
 
