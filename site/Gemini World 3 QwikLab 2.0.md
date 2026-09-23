@@ -15,7 +15,7 @@ You will:
 
 For this lab, you'll be given access to a temporary GCP environment plus a **remote virtual desktop** where you'll do all your development. Everything runs in the cloud — your code, your tools, and **Antigravity 2.0** (AGY for short), Google's agentic development environment.
 
-> **What is Antigravity?** Antigravity is Google's agentic IDE — an AI pair programmer you'll use to build, test, and deploy your agent.
+> **What is Antigravity?** Antigravity 2.0 is a standalone Google app where you work with AI agents that can run commands, read and write files, search the web, and use tools. In this lab, you'll use it to build, test, and deploy your agent.
 
 > **Avoid agent confusion!** In this workshop, we'll be _building_ an agent with the help of an _additional_ agent — specifically, the coding agent Antigravity (AGY). It's helpful to keep this distinction in mind as we go.
 
@@ -131,6 +131,12 @@ This could take a minute. When your agent is finally deployed, you'll be able to
 Clicking in, we can see the extended tool suite available for monitoring our agent in production:
 ![](images/view-deployment-4.png)
 
+**From here on, test locally.** Until the **Redeploy your finished agent** step, you'll build and test everything locally in the Playground, so you don't need to redeploy after each change. Paste this into AGY once so it doesn't redeploy on its own:
+
+```
+For the rest of this lab, don't redeploy my agent to Agent Platform or my frontend to Cloud Run unless I explicitly ask. After each change, I'll test locally.
+```
+
 
 # Design Your App
 
@@ -171,35 +177,9 @@ Now that you have a brief, rename your existing agent project to match the app y
 Use the newly created project_brief.md to rename my existing agent project to match it: rename the project folder and update the name in agents-cli-manifest.yaml and pyproject.toml. Keep the code in app/ unchanged, and don't deploy or change any agent logic yet.
 ```
 
-# Add Memory
-
-While **sessions** store information about a current conversation, sometimes we want to remember facts _between_ sessions. Example: if a customer tells a shopping agent he hates the color red, that fact should be present across _all_ future sessions.
-
-We can enable this cross-session remembering with Agent Platform's [Memory Bank](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank). Every time the user sends the agent a message, Memory Bank analyzes the conversation and automatically extracts and remembers factual snippets that might be useful to future conversations.
-
-> **Important** Memory Bank only works with a **deployed** agent — memories are extracted server-side on Agent Platform, not when you run the agent locally in the Playground. Everything in this section assumes you've deployed your agent and are chatting with the **deployed** agent in the browser. If you're testing locally, deploy first (`redeploy`) and use the deployed agent, or you won't see any memories.
-
-Let's tell AGY to set up memory using its skill:
-
-```
-Use the memory-bank-setup skill to add memory to my agent using a Vertex AI Memory Bank instance. Then rewrite my agent to use the new memory service and redeploy.
-```
-
-Depending on your application, you can be more specific about what to remember:
-
-```
-Configure memory so that all user allergies are remembered.
-```
-
-To try it out, chat with your **deployed** agent (in the browser) and tell it a durable fact about yourself (for example, a preference). Memory Bank extracts memories in the background after the turn. You can then see the stored memories in the Agent Platform UI [here](https://console.cloud.google.com/agent-platform/memory-bank):
-
-![A memory stored in the Agent Platform Memory Bank UI](images/apothecary-memory.png)
-
-If you don't see any memories logged here, you may need ask Antigravity to redeploy your agent.
-
 # Add Persistent Storage
 
-Memory Bank is great for remembering conversational facts about a user: their preferences, details they've mentioned, how they like to be addressed. It's not a general-purpose database. For your app's actual data — the things it looks up and writes to, that aren't tied to one user's conversation, like a product catalog, a booking, an inventory count, or generated images — you'll want dedicated persistent storage.
+Your app also needs somewhere to keep its actual data — the things it looks up and writes to, like a product catalog, a booking, an inventory count, or generated images. For that, you'll want dedicated persistent storage.
 
 Depending on your application, you may require an external data store, like:
 
@@ -222,7 +202,7 @@ You can watch the data live in your Firestore database [here](https://console.cl
 
 ![The Firestore data viewer in the Firebase console shows your seeded collection.](images/firestore.png)
 
-## Store Files in Cloud Storage
+## Store files in Cloud Storage
 
 Firestore is great for structured records, but for raw files — images, audio, video — you'll want **Cloud Storage**. This is handy when your agent generates media that you want to persist and serve publicly, for example so your frontend can embed it as an image.
 
@@ -253,7 +233,7 @@ Implement the tool we just discussed as a function tool and add it to my agent. 
 
 Test it in the agent playground or debug screen. Ask it to do something that the tool is able to do, and the agent should be able to call the tool. You should be able to confirm this trace in the logs. 
 
-# Find and Add Your Own APIs
+# Call External APIs
 
 The tool you just added ran your own code. But a tool can also reach out to the
 wider web and pull in live data from someone else's service. That's the
@@ -305,7 +285,7 @@ Test it in the Playground by asking something that can only be answered from the
 live API. In the trace you'll see the tool fire, the HTTP call go out, and the
 agent answer from real data instead of making it up.
 
-## Example API Integration with Google Maps
+## Example: Google Maps
 
 Location features like "find coffee shops near me," "how far is it," and "what's
 the address of this place" are a natural fit for **Google Maps Platform**, and a
@@ -342,8 +322,8 @@ in place of `PASTE_KEY_HERE`:
 
 ```
 First, enable the Geocoding and Places (New) APIs on my project. Here's my Maps
-API key: PASTE_KEY_HERE. Set it as the GOOGLE_MAPS_API_KEY environment variable
-for my agent; don't hardcode it in a source file. Then add a tool that uses the
+API key: PASTE_KEY_HERE. Save it as GOOGLE_MAPS_API_KEY in my local .env; don't
+hardcode it in a source file. Then add a tool that uses the
 Geocoding API to turn an address into coordinates, and one that uses the Places
 API (New) to find nearby places of a given type. Call the REST endpoints
 directly and return the key fields (name, address, location). Use the Developer
@@ -358,26 +338,6 @@ tool hit the live Maps endpoint in the trace.
 > back to Maps on your own Google Cloud project later (new accounts get a $300
 > free trial credit that covers it). The pattern is the same for any key-based
 > API: enable it, get a key, store it in an env var, call it from a tool.
-
-# Ground Your Agent with RAG
-
-Sometimes your agent needs to answer from a reference document — a product manual, a policy handbook, a collection of recipes, a set of research papers — that's too large to paste into a prompt. **RAG (Retrieval-Augmented Generation)** solves this: you index your documents into a **corpus**, and at runtime your agent retrieves only the most relevant passages and grounds its answer on them, instead of guessing.
-
-Under the hood, the corpus is built once — your documents are chunked, embedded, and stored in a managed vector database. Your agent then reaches the corpus through a **retrieval tool**, the same kind of tool you just added, but backed by semantic search over your own documents.
-
-To try this out, we need a reference document. A `.txt` file is simplest. We'll use an [old-timey medical guide](https://www.gutenberg.org/cache/epub/49513/pg49513.txt) from Project Gutenberg. Rather than downloading it by hand, point AGY straight at the URL — it will fetch the file into your project and index it in one step. This uses the `rag-engine-setup` skill, which creates a **serverless** RAG corpus (the cheapest, no-allowlist option) and adds the retrieval tool for you:
-
-```
-Download https://www.gutenberg.org/cache/epub/49513/pg49513.txt into my project, then use the rag-engine-setup skill to ground my agent on that file: create a serverless Vertex AI RAG corpus, import and index the file, then add a retrieval tool so my agent answers from the corpus.
-```
-
-Building the corpus takes a few minutes — the files are parsed, chunked, and embedded before the index is ready. When it's done, test it in the Playground by asking something that can only be answered from your documents. Adapt the question to your domain (for a recipe agent: *"What's a good remedy for a cough?"*; for a policy bot: *"What's the refund window?"*). The agent should call the retrieval tool and answer from the retrieved passages rather than making something up.
-
-You can watch this happen in the Playground's trace: the retrieval tool fires, returns the top matching chunks, and the model composes a grounded answer from them.
-
-You can also inspect your corpus and its indexed files in the console [here](https://console.cloud.google.com/agent-platform/rag):
-
-![The Vertex AI RAG Engine showing your corpus and its indexed documents](images/culpeper-retreival.png)
 
 # Generate Images
 Tools can also give your agent the power of Google's generative AI models. A great one to reach for is image generation with `gemini-3.1-flash-lite-image` (Nano Banana 2 Lite), Google's fastest image model, which turns a short text prompt into an image so your agent can create visuals on demand. It runs in the `global` region. You can read about it here: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/gemini/3-1-flash-lite-image
@@ -395,15 +355,41 @@ Now ask your agent to generate an image for one of the items in your domain. You
 
 Some agents need to execute code, whether that's for quick API calls, data analysis, or just doing math. Agent Platform offers code execution in an isolated sandbox, so your agent is able to code safely. Since the state persists across sessions and it doesn't touch your host, it is a very safe way to run model-generated code, even in enterprise settings.
 
-Prereqs: the Agent Platform API enabled, and your agent's identity has roles/aiplatform.user.
+Prereqs: the Agent Platform API enabled. When you run locally, the sandbox uses your own credentials.
 
 ```bash
-Add Agent Platform code execution to my agent using AgentEngineSandboxCodeExecutor so it can safely run Python in a sandbox. If I don't already have a sandbox, create one from my agent engine resource.
+Add Agent Platform code execution to my agent using AgentEngineSandboxCodeExecutor so it can safely run Python in a sandbox. If I don't already have a sandbox, create one from the Agent Engine in my deployment_metadata.json.
 ```
 
 Test it by asking a question that requires real computation or analysis, like fizzbuzz, and confirm the agent runs code in the sandbox and answers from the result.
 
 Of course, you are able to update your tool instructions from the last section to use the sandbox as well. For folks who are building agents for things like auto-trading or coding, this is a super useful feature to incorporate into your agent.
+
+# Add Memory
+
+While **sessions** store information about a current conversation, sometimes we want to remember facts _between_ sessions. Example: if a customer tells a shopping agent he hates the color red, that fact should be present across _all_ future sessions.
+
+We can enable this cross-session remembering with Agent Platform's [Memory Bank](https://docs.cloud.google.com/gemini-enterprise-agent-platform/scale/memory-bank). Every time the user sends the agent a message, Memory Bank analyzes the conversation and automatically extracts and remembers factual snippets that might be useful to future conversations. Unlike Firestore, which stores your app's data, Memory Bank remembers facts about the user.
+
+> **Note:** Memory Bank is a managed service on Agent Platform, but you don't need to redeploy to use it. The Agent Engine you created in your first deploy also serves as your Memory Bank, and your local Playground can connect to it directly. The standard `agents-cli playground` command can't connect to Memory Bank, so AGY starts the Playground with `adk web` instead. It still opens at `http://localhost:8080`.
+
+Let's tell AGY to set up memory using its skill:
+
+```
+Use the memory-bank-setup skill to add memory to my agent. Reuse the Agent Engine from my earlier deployment as the Memory Bank (its ID is the last part of remote_agent_runtime_id in deployment_metadata.json). Also set the memory service in the app code so it's used when I redeploy later, but don't redeploy now. Then restart my local playground with `uv run adk web . --port 8080 --reload_agents --memory_service_uri=agentengine://<ID>` instead of `agents-cli playground`, and use that same command whenever I ask you to launch or restart the playground.
+```
+
+Depending on your application, you can be more specific about what to remember:
+
+```
+Configure memory so that all user allergies are remembered.
+```
+
+To try it out, tell your agent a durable fact about yourself in the Playground (for example, a preference), then start a **new session** and ask something that depends on it. Memory Bank extracts memories in the background after each turn. You can see the stored memories in the Agent Platform UI [here](https://console.cloud.google.com/agent-platform/memory-bank):
+
+![A memory stored in the Agent Platform Memory Bank UI](images/apothecary-memory.png)
+
+If you don't see any memories, ask AGY to confirm the Playground was started with `--memory_service_uri`.
 
 # Enrich Responses with A2UI
 
@@ -422,7 +408,7 @@ Use the enable-a2ui skill to add A2UI to my agent: build the system prompt with 
 
 One thing to watch: the callback only recognizes v0.8 messages, so if the schema manager emits v0.9 instead, the callback never fires and you're back to raw JSON.
 
-### Validating A2UI locally before redeploying
+## Validate A2UI locally before redeploying
 
 Test it in the same Playground you have been using. The Playground is really the ADK dev UI (`agents-cli playground` runs `adk web` for you), and it comes with a built-in A2UI renderer. It only renders A2UI once the callback is in place, so restart the Playground to pick up your changes:
 
@@ -430,14 +416,14 @@ Test it in the same Playground you have been using. The Playground is really the
 Restart the agent playground so it picks up my latest changes.
 ```
 
-This restart is **local only**: it reloads the Playground process on your machine, not the agent you already deployed to Agent Platform. Redeploying takes several minutes, so don't do it after every small change — verify A2UI here first. You'll push everything you've built (storage, tools, media, sandbox, and A2UI) to the deployed agent in one shot later, in the **Redeploy your finished agent** step.
+This restart is **local only**: it reloads the Playground process on your machine, not the agent you already deployed to Agent Platform. Redeploying takes several minutes, so don't do it after every small change — verify A2UI here first. You'll push everything you've built (storage, tools, media, sandbox, memory, and A2UI) to the deployed agent in one shot later, in the **Redeploy your finished agent** step.
 
 Start a new session, then ask for something that fits a card or table. For a store agent, "Show me what's in stock" might render a table, and "Tell me about this item" might render a card. Adapt the question to whatever your agent knows about. You should see real UI instead of JSON.
 ![](images/a2ui-in-adk-playground.png)
 
 A card can also show an image. Add an `Image` component and set its URL to the public URL your image tool returns, and the picture appears inside the card instead of only in the Artifacts panel. Ask your agent to generate an image for an item and show it, and you should get a card with the picture in it. The URL must be a public `https` link. A bare artifact filename cannot be loaded by the renderer and shows as a broken image.
 
-One important setting: **turn Token Streaming OFF** in the Playground (the toggle in its settings). With streaming on, the dev UI shows the raw streamed JSON and never swaps in the card. If you still see raw JSON after that, check that the callback is wired up and that you are on version 0.8, then hard-refresh and start a new session. (If the Playground in your environment still won't render it, you can run the dev UI directly with `uv run adk web --port 8080 --allow_origins "*" --reload_agents`.)
+One important setting: **turn Token Streaming OFF** in the Playground (the toggle in its settings). With streaming on, the dev UI shows the raw streamed JSON and never swaps in the card. If you still see raw JSON after that, check that the callback is wired up and that you are on version 0.8, then hard-refresh and start a new session. (If the Playground in your environment still won't render it, you can run the dev UI directly with `uv run adk web --port 8080 --allow_origins "*" --reload_agents`, plus the `--memory_service_uri` flag from the Add Memory step.)
 
 # Build a Frontend
 
@@ -445,10 +431,10 @@ Up to now you've tested everything in the ADK playground, and that's been your a
 
 ## Redeploy your finished agent
 
-Your agent has grown a lot since you first deployed it: it now has storage, tools, media generation, a sandbox, and A2UI, none of which are in that original deployment. Before wiring up a frontend, push the latest version to Agent Platform so the frontend talks to the fully-featured agent:
+Your agent has grown a lot since you first deployed it: it now has storage, tools, media generation, a sandbox, memory, and A2UI, none of which are in that original deployment. Before wiring up a frontend, push the latest version to Agent Platform so the frontend talks to the fully-featured agent:
 
 ```bash
-Redeploy my agent to Agent Platform.
+Redeploy my agent to Agent Platform. If my agent reads any API keys from environment variables (like GOOGLE_MAPS_API_KEY), pass them to the deployment with --update-env-vars.
 ```
 
 Do this next if your agent uses Firestore or Cloud Storage. The deployed agent runs as its own service account, which has no access to your data by default. It worked in the Playground because you ran as yourself. On the deployed agent a Firestore query comes back empty, and an image upload to Cloud Storage fails and no image appears. Grant the roles the deployed agent needs:
@@ -473,7 +459,7 @@ Using the build-agent-frontend skill, copy its minimal FastAPI proxy and chat UI
 
 (If your project already has a web frontend you'd rather keep, tell AGY to adapt that one to the same proxy pattern instead of creating a new one.)
 
-## Test Locally
+## Test locally
 
 Before deploying the frontend, confirm that your code can reach your agent that is currently deployed on Agent Platform. Running locally means the frontend server runs on your machine instead of Cloud Run, but it talks to the same deployed agent. This catches wiring issues before you ship to Cloud Run.
 
@@ -523,7 +509,7 @@ Open the Cloud Run URL and chat with your deployed agent. That's the full loop: 
 
 # Customize Your Frontend
 
-Your whole UI lives in one file, `frontend/static/index.html`: a chat page with a title, a header, and an accent color. Ask AGY to restyle it. A few things to try:
+Your whole UI lives in one file, `frontend/static/index.html`: a chat page with a title, a header, and an accent color. Ask AGY to restyle it. Check each change at `http://localhost:8080` (refresh the page), and when you're happy with it, ask AGY once to redeploy the frontend to Cloud Run. A few things to try:
 
 ```
 Rebrand my frontend: set the title and header to my app's name and change the accent color.
@@ -596,7 +582,7 @@ On success it prints `SUCCESS: Recording saved to <path>`, leaving a branded `.w
 A demo is even better with a landing page. Ask AGY to generate a README that tells the story of your app and shows the clip you just recorded — as a **GIF**, which is the no-fuss way to get a demo playing in a README:
 
 ```
-Generate a README.md for my project. Describe what my agent actually does based on the code in this repo — read app/ and agents-cli-manifest.yaml to see which tools and Google Cloud services are really wired up (Memory Bank, Firestore, Cloud Storage, RAG, image generation, A2UI) and list ONLY those. Don't claim a capability the code doesn't implement; if something in my project_brief.md was planned but not finished, leave it out or mark it clearly as "planned, not yet implemented." Do NOT put any live links to localhost (like http://localhost:8080) or to ephemeral Cloud URLs (Cloud Run / Agent Engine endpoints from this lab) in the README — they die when this workstation is torn down and will 404 for anyone reading it later. If you need to show how to run it, write it as setup/run instructions (the commands to start it locally), not as a clickable link. Then convert the demo I recorded with record-demo (the .webm file) to an optimized, looping GIF and embed it near the top with a relative path so it plays inline — use only that real recording; if there isn't one, leave the demo out rather than generating or drawing a placeholder.
+Generate a README.md for my project. Describe what my agent actually does based on the code in this repo — read app/ and agents-cli-manifest.yaml to see which tools and Google Cloud services are really wired up (Memory Bank, Firestore, Cloud Storage, image generation, A2UI) and list ONLY those. Don't claim a capability the code doesn't implement; if something in my project_brief.md was planned but not finished, leave it out or mark it clearly as "planned, not yet implemented." Do NOT put any live links to localhost (like http://localhost:8080) or to ephemeral Cloud URLs (Cloud Run / Agent Engine endpoints from this lab) in the README — they die when this workstation is torn down and will 404 for anyone reading it later. If you need to show how to run it, write it as setup/run instructions (the commands to start it locally), not as a clickable link. Then convert the demo I recorded with record-demo (the .webm file) to an optimized, looping GIF and embed it near the top with a relative path so it plays inline — use only that real recording; if there isn't one, leave the demo out rather than generating or drawing a placeholder.
 ```
 
 Why a GIF? Committed alongside your code and referenced with a plain relative path (`![demo](demo.gif)`), it renders and loops automatically on GitHub — no uploads, no special links. Keep the original `.webm` as your high-quality **social asset**: X, LinkedIn, and Slack all play an uploaded video natively.
@@ -634,8 +620,6 @@ When it's done, AGY prints your new repo's URL and a **pre-filled submission for
 - Submitting the form is how you enter for swag and the project gallery — the form itself lists the current eligibility terms.
 - **Standout projects** get hand-picked by the team and featured (with a link to your repo) in the **Build with Gemini track 3 GitHub gallery**.
 
-Congratulations! You've designed, built, equipped, evaluated, deployed, shared, *and* published a complete agentic application.
-
 # Earn a Skill Badge
 
 Now that you've finished the workshop, you can earn an official **Build with Gemini** Skill Badge for your Google Developer Profile. It's an Intermediate quiz that takes about **30 minutes** and confirms what you learned here.
@@ -647,3 +631,5 @@ Claim it today:
 Or scan the QR code to open it on your phone:
 
 ![Scan to earn your Build with Gemini Skill Badge](images/skill-badge-qr.png)
+
+Congratulations! You've designed, built, equipped, evaluated, deployed, shared, *and* published a complete agentic application.
