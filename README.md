@@ -90,6 +90,7 @@ Bump the "Projects" badge count at the top when you add one.
 ### 📚 Learning & Knowledge Agents
 
 - 🎤 **[Interview Coach (PrepPal)](https://github.com/VineethBaradi/buildwithgemini-interview-coach)**: A mock-interview coach that runs LLM-driven practice sessions from a Firestore question bank and gives performance feedback. <br/> <sub>by [@VineethBaradi](https://github.com/VineethBaradi)</sub>
+- 🌟 **[Noor Quest](https://github.com/bavan52/noor-quest-bwg)**: An interactive agent-driven storytelling platform connecting cross-border families through shared narratives and cultural discovery. <br/> <sub>by [@bavan52](https://github.com/bavan52)</sub>
 
 ### 🎨 Creative & Media Agents
 
