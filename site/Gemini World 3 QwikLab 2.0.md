@@ -96,7 +96,7 @@ Your setup is complete — let's start building! 🎊
 Later in this lab, you'll design your own bespoke agentic application. But for now, let's build and test a basic agent together. Tell AGY to build a basic agent and run it locally.
 
 ```
-Use agents-cli to build a simple agent I can test and run it locally.
+Use agents-cli to build a simple agent I can test and run it locally. Make sure to use Gemini 3.8 flash model.
 ```
 
 When it's done, AGY should produce something like:
@@ -667,16 +667,16 @@ When it's done, AGY prints your new repo's URL and a **pre-filled submission for
 When it's done, AGY prints your new repo's URL.
 <!-- /variant -->
 
-# Earn a Skill Badge
+# Earn the Google Developer Badge
 
-Now that you've finished the workshop, you can earn an official **Build with Gemini** Skill Badge for your Google Developer Profile. It's an Intermediate quiz that takes about **30 minutes** and confirms what you learned here.
+Now that you've finished the workshop, you can earn an official **Build with Gemini** badge for your Google Developer profile.
 
 Claim it today:
 
-[Claim your Build with Gemini Skill Badge](https://developers.google.com/profile/badges/events/community/build-with-gemini/track3-software-developer/award?utm_source=events-with-google&utm_medium=et&utm_campaign=FY26-Q3-BuildwithGemini&utm_content=track3_appbuilders&utm_term=-)
+[Claim your Build with Gemini Badge](https://developers.google.com/profile/badges/events/community/build-with-gemini/track3-software-developer/award?utm_source=events-with-google&utm_medium=et&utm_campaign=FY26-Q3-BuildwithGemini&utm_content=track3_appbuilders&utm_term=-)
 
 Or scan the QR code to open it on your phone:
 
-![Scan to earn your Build with Gemini Skill Badge](images/skill-badge-qr.png)
+![Scan to earn your Build with Gemini Badge](images/skill-badge-qr.png)
 
 Congratulations! You've designed, built, equipped, evaluated, deployed, shared, *and* published a complete agentic application.
